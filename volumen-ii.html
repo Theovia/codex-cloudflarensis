@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Architectura Cloudflarensi · Codex Volumen II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+.nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(241, 228, 196, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #8b6914; padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+.nav-bar a { color: #3d2a18; text-decoration: none; padding: 4px 12px; border-bottom: 1px solid transparent; transition: all 0.3s; }
+.nav-bar a:hover { color: #8b1a1a; border-bottom-color: #8b6914; }
+.nav-bar .nav-current { color: #8b1a1a; font-weight: 700; }
+.nav-bar .nav-home { font-family: 'EB Garamond', serif; font-style: italic; letter-spacing: 0.2em; }
+.codex { padding-top: 100px !important; }
+@media (max-width: 700px) { .nav-bar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; font-size: 9px; } }
+</style>
+
+<style>
+:root {
+  --parchment: #f1e4c4;
+  --parchment-light: #f9efd1;
+  --parchment-dark: #e6d4a8;
+  --parchment-shadow: #c9b685;
+  --ink: #1a0f05;
+  --ink-soft: #3d2a18;
+  --ink-faded: #6b5236;
+  --gold-1: #b8860b;
+  --gold-2: #d4a843;
+  --gold-3: #f5d574;
+  --gold-4: #fdf2c4;
+  --gold-deep: #8b6914;
+  --crimson: #8b1a1a;
+  --crimson-deep: #5e0f0f;
+  --vermillion: #c0392b;
+  --lapis: #1e3a8a;
+  --lapis-deep: #0d1f5c;
+  --azurite: #2a5298;
+  --verdigris: #4a7c59;
+  --malachite: #2d5a3d;
+  --violet: #6b2d99;
+  --violet-deep: #4a1d6e;
+  --amethyst: #8e44c5;
+  --sepia: #6b4423;
+  --umber: #4a2f17;
+  --vellum-rule: rgba(26, 15, 5, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 105, 20, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.28   0 0 0 0 0.1   0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: cover, cover, 400px 400px;
+  background-attachment: fixed;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 15, 5, 0.18) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.codex { max-width: 1240px; margin: 0 auto; padding: 80px 48px 120px; position: relative; z-index: 2; }
+
+/* HERO */
+.hero { text-align: center; padding: 60px 0 100px; }
+.hero-frame {
+  width: 100%; max-width: 980px; margin: 0 auto; position: relative; padding: 80px 64px;
+}
+.ornament-corner { position: absolute; width: 90px; height: 90px; pointer-events: none; }
+.ornament-corner.tl { top: 0; left: 0; }
+.ornament-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner.br { bottom: 0; right: 0; transform: scale(-1); }
+
+.eyebrow-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px;
+  letter-spacing: 0.3em; color: var(--ink-faded); text-transform: uppercase; margin-bottom: 28px;
+}
+.hero-rule {
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  margin: 0 auto 32px;
+}
+h1.codex-title {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-weight: 900; font-size: clamp(40px, 6vw, 76px); line-height: 1.05;
+  letter-spacing: 0.02em; color: var(--ink); margin-bottom: 24px;
+  text-transform: uppercase; text-align: center;
+}
+h1.codex-title .gilt {
+  display: inline-block; font-size: 0.78em; letter-spacing: 0.01em;
+  background: linear-gradient(180deg, var(--gold-3) 0%, var(--gold-2) 30%, var(--gold-deep) 70%, var(--gold-2) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4));
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%, 100% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)) brightness(1); }
+  50% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.7)) brightness(1.15); }
+}
+.hero-subtitle {
+  font-family: 'Cinzel', serif; font-weight: 500; font-size: 22px;
+  letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; margin-bottom: 40px;
+}
+.hero-lede {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px; line-height: 1.65;
+  font-weight: 400; color: var(--ink-soft); max-width: 640px; margin: 0 auto; font-style: italic;
+}
+.hero-lede strong { font-style: normal; font-weight: 600; color: var(--crimson); }
+
+.toc {
+  margin-top: 56px; display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.toc a {
+  color: var(--ink-faded); text-decoration: none; border-bottom: 1px solid transparent;
+  padding-bottom: 2px; transition: color 0.3s, border-color 0.3s;
+}
+.toc a:hover { color: var(--crimson); border-bottom-color: var(--gold-deep); }
+
+/* DIVIDERS */
+.section-divider { width: 100%; text-align: center; margin: 80px 0 60px; }
+.section-divider svg { display: inline-block; width: 280px; height: 36px; }
+
+/* SECTIONS */
+.section { margin-bottom: 100px; }
+.section-head { text-align: center; margin-bottom: 60px; }
+.section-num {
+  font-family: 'Cinzel Decorative', serif; font-size: 60px; font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: 0.08em; margin-bottom: 8px;
+  filter: drop-shadow(0 2px 0 rgba(139, 105, 20, 0.3));
+}
+h2.section-title {
+  font-family: 'Cinzel', serif; font-weight: 700;
+  font-size: clamp(28px, 4vw, 42px); letter-spacing: 0.04em; color: var(--ink);
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.section-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px;
+  color: var(--crimson); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px;
+}
+.section-sub {
+  font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--ink-soft);
+  max-width: 660px; margin: 0 auto; line-height: 1.6;
+}
+
+/* PATTERN CARDS */
+.patterns { display: grid; gap: 40px; }
+.pattern {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 64px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 56px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+}
+.pattern-corner { position: absolute; width: 60px; height: 60px; pointer-events: none; z-index: 2; }
+.pattern-corner.tl { top: 12px; left: 12px; }
+.pattern-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+.pattern-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+.pattern-corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+.pattern-illum { display: flex; flex-direction: column; align-items: center; }
+.pattern-num {
+  font-family: 'Cinzel Decorative', serif; font-size: 14px; font-weight: 700;
+  color: var(--gold-deep); letter-spacing: 0.3em; margin-bottom: 12px;
+}
+.pattern-name-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px;
+  color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;
+  text-align: center;
+}
+.pattern-name {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px;
+  letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase;
+  text-align: center; margin-bottom: 20px;
+}
+
+.pattern-diagram {
+  width: 100%; aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.08), rgba(139, 26, 26, 0.05));
+  border: 2px solid var(--gold-deep);
+  box-shadow: 0 0 0 1px var(--parchment) inset, 0 0 0 2px var(--gold-2) inset;
+  padding: 16px;
+}
+.pattern-diagram svg { width: 100%; height: 100%; display: block; }
+
+.pattern-content { display: flex; flex-direction: column; gap: 18px; }
+.block-label {
+  font-family: 'Cinzel', serif; font-weight: 600; font-size: 11px;
+  letter-spacing: 0.25em; color: var(--crimson); text-transform: uppercase;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+}
+.block-label::before, .block-label::after {
+  content: ''; height: 1px; flex: 0 0 24px; background: var(--crimson); opacity: 0.3;
+}
+.block-label::before { flex: 0 0 12px; }
+.block-label::after { flex: 1 1 auto; }
+.essence {
+  font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 21px;
+  color: var(--ink); font-style: italic; line-height: 1.4;
+}
+.pattern-content p {
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.65; color: var(--ink-soft);
+}
+.pattern-content code {
+  font-family: 'SF Mono', 'JetBrains Mono', monospace;
+  font-size: 14px; background: rgba(139, 26, 26, 0.08);
+  padding: 2px 6px; border-radius: 2px; color: var(--crimson-deep);
+}
+.tradeoffs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  background: rgba(255, 248, 220, 0.4); border-left: 3px solid var(--gold-deep);
+  padding: 14px 18px;
+}
+.tradeoff { display: flex; flex-direction: column; gap: 4px; }
+.tradeoff .tr-label {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold-deep); font-weight: 700;
+}
+.tradeoff .tr-body {
+  font-family: 'Cormorant Garamond', serif; font-size: 15px;
+  color: var(--ink-soft); line-height: 1.5;
+}
+.tradeoff.pro .tr-label { color: var(--malachite); }
+.tradeoff.con .tr-label { color: var(--crimson); }
+
+.use-case {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px;
+  color: var(--gold-deep); padding-top: 12px; border-top: 1px dotted var(--vellum-rule);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.use-case::before { content: '✦'; color: var(--gold-deep); flex: 0 0 auto; }
+
+/* THEORY */
+.theorems { display: grid; gap: 28px; }
+.theorem {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 40px 48px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 3px var(--parchment) inset,
+    0 0 0 4px var(--gold-deep) inset,
+    0 16px 32px -16px rgba(26, 15, 5, 0.25);
+}
+.theorem-head {
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 20px; padding-bottom: 16px;
+  border-bottom: 1px dotted var(--vellum-rule);
+}
+.theorem-mark {
+  flex: 0 0 56px; width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-2));
+  border: 2px solid var(--crimson);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel Decorative', serif; font-size: 28px; font-weight: 900;
+  color: var(--parchment-light); box-shadow: 0 0 0 1px var(--parchment) inset;
+}
+.theorem-title-block {}
+.theorem-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px;
+  color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;
+}
+.theorem-title {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px;
+  letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase;
+}
+.theorem p {
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.7;
+  color: var(--ink-soft); margin-bottom: 12px;
+}
+.theorem p strong { color: var(--ink); font-weight: 700; }
+.theorem .axiom {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 17px;
+  color: var(--crimson); padding: 12px 18px; background: rgba(255, 248, 220, 0.5);
+  border-left: 3px solid var(--crimson); margin: 12px 0;
+}
+
+/* REFERENCE SYSTEMS */
+.reference-system {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 64px;
+  margin-bottom: 40px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+}
+.refsys-head { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px dotted var(--vellum-rule); }
+.refsys-num {
+  font-family: 'Cinzel Decorative', serif; font-size: 36px; font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.refsys-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px;
+  color: var(--crimson); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;
+}
+.refsys-title {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 26px;
+  letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase;
+}
+.refsys-diagram {
+  width: 100%; aspect-ratio: 16 / 9; min-height: 400px;
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.06), rgba(13, 31, 92, 0.04));
+  border: 2px solid var(--gold-deep); padding: 16px;
+  box-shadow: 0 0 0 1px var(--parchment) inset, 0 0 0 2px var(--gold-2) inset;
+  margin-bottom: 24px;
+}
+.refsys-diagram svg { width: 100%; height: 100%; }
+.refsys-walkthrough {
+  display: grid; gap: 12px;
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--ink-soft);
+}
+.walkthrough-step {
+  display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: baseline;
+  padding: 8px 0;
+}
+.walkthrough-step .step-num {
+  font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 20px;
+  color: var(--gold-deep); text-align: center;
+}
+.walkthrough-step strong { color: var(--ink); font-weight: 700; }
+
+/* SINS */
+.sins-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.sin {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 28px 32px;
+  position: relative;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 3px var(--parchment) inset,
+    0 0 0 4px var(--gold-deep) inset;
+}
+.sin::before {
+  content: '✗'; position: absolute; top: 16px; right: 20px;
+  font-family: serif; font-size: 28px; color: var(--crimson); opacity: 0.3;
+}
+.sin-num {
+  font-family: 'Cinzel Decorative', serif; font-size: 28px; font-weight: 900;
+  color: var(--crimson); margin-bottom: 4px;
+}
+.sin-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px;
+  color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;
+}
+.sin-title {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 16px;
+  letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; margin-bottom: 12px;
+}
+.sin-body {
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; line-height: 1.55; color: var(--ink-soft);
+}
+.sin-body strong { color: var(--crimson); font-weight: 700; }
+
+/* DECISION TREE */
+.decision-wrap {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 40px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset;
+  overflow-x: auto;
+}
+.decision-tree { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--ink); }
+.dt-question {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 14px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--crimson);
+  margin: 16px 0 8px;
+  padding-left: 0;
+}
+.dt-branch {
+  margin-left: 24px; padding-left: 20px;
+  border-left: 2px solid var(--gold-deep); position: relative;
+}
+.dt-answer {
+  display: flex; align-items: baseline; gap: 12px;
+  margin: 8px 0; padding: 6px 0;
+}
+.dt-answer .arrow {
+  font-family: 'Cinzel', serif; font-weight: 700; color: var(--gold-deep);
+  flex: 0 0 auto;
+}
+.dt-result {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 14px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--malachite);
+  background: rgba(45, 90, 61, 0.08); padding: 4px 10px; border-radius: 2px;
+}
+
+/* EPILOGUE */
+.epilogue {
+  background:
+    linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(139, 26, 26, 0.05) 100%),
+    linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 64px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  text-align: center;
+}
+.epilogue-mark {
+  font-family: 'Cinzel Decorative', serif; font-size: 72px;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 16px; line-height: 1;
+}
+.epilogue-title {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(24px, 3.4vw, 36px);
+  letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; margin-bottom: 8px;
+}
+.epilogue-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px;
+  color: var(--crimson); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 28px;
+}
+.epilogue p {
+  font-family: 'Cormorant Garamond', serif; font-size: 21px; line-height: 1.7;
+  color: var(--ink-soft); max-width: 720px; margin: 0 auto 18px;
+}
+.epilogue p strong { font-weight: 700; color: var(--crimson); }
+.epilogue p:first-of-type::first-letter {
+  font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 42px;
+  color: var(--gold-deep); float: left; line-height: 0.9; margin-right: 8px; margin-top: 4px;
+}
+.colophon { text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--vellum-rule); }
+.colophon-mark { font-family: 'Cinzel Decorative', serif; font-size: 32px; color: var(--gold-deep); margin-bottom: 16px; }
+.colophon-text {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px;
+  color: var(--ink-faded); letter-spacing: 0.15em; text-transform: uppercase;
+}
+
+/* DIAGRAM SHARED STYLES */
+.dg-node-bg { fill: var(--parchment-light); stroke: var(--gold-deep); stroke-width: 1.5; }
+.dg-node-label {
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 11px;
+  fill: var(--ink); text-anchor: middle; letter-spacing: 0.05em;
+}
+.dg-node-latin {
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 9px;
+  fill: var(--gold-deep); text-anchor: middle;
+}
+.dg-arrow { fill: none; stroke: var(--gold-deep); stroke-width: 1.5; opacity: 0.7; }
+.dg-arrow-bold { fill: none; stroke: var(--crimson); stroke-width: 2; opacity: 0.9; }
+.dg-flow {
+  stroke-dasharray: 6 4;
+  animation: flow 3s linear infinite;
+}
+@keyframes flow { to { stroke-dashoffset: -20; } }
+.dg-text {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px;
+  fill: var(--ink-soft); text-anchor: middle;
+}
+
+@media (max-width: 1000px) {
+  .pattern { grid-template-columns: 1fr; padding: 40px 28px; gap: 32px; }
+  .sins-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .codex { padding: 40px 20px 80px; }
+  .hero-frame { padding: 40px 16px; }
+  .epilogue, .reference-system { padding: 32px 24px; }
+  .tradeoffs { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">❦ Bibliotheca</a>
+  <div style="display:flex;gap:8px">
+    <a href="volumen-i.html">Vol I · Primitivae</a>
+    <a href="volumen-ii.html" class="nav-current">Vol II · Architectura</a>
+    <a href="volumen-iii.html">Vol III · Operationes</a>
+  </div>
+</nav>
+
+<!-- SVG SYMBOLS -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn-corner" viewBox="0 0 90 90">
+      <g fill="none" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 4,4 L 86,4 L 86,16 L 16,16 L 16,86 L 4,86 Z" fill="#d4a843" fill-opacity="0.15" stroke="#8b6914"/>
+        <path d="M 18,18 Q 30,20 36,32 Q 38,42 32,52 Q 22,58 18,52 M 18,18 Q 26,32 18,42 M 32,28 Q 42,22 50,28 Q 58,38 50,46 Q 42,52 36,48"/>
+        <circle cx="22" cy="22" r="2" fill="#8b1a1a"/>
+        <circle cx="38" cy="36" r="1.5" fill="#1e3a8a"/>
+        <path d="M 42,12 Q 50,8 58,12 M 50,12 L 50,4 M 12,42 Q 8,50 12,58 M 12,50 L 4,50"/>
+      </g>
+    </symbol>
+    <symbol id="divider" viewBox="0 0 280 36">
+      <g fill="none" stroke="#8b6914" stroke-width="1.2" stroke-linecap="round">
+        <path d="M 4,18 L 30,18 M 30,18 L 30,10 L 38,10 L 38,26 L 22,26 L 22,14 L 50,14 L 50,22 L 60,22"/>
+        <path d="M 220,22 L 230,22 L 230,14 L 258,14 L 258,26 L 242,26 L 242,10 L 250,10 L 250,18 L 276,18"/>
+        <circle cx="140" cy="18" r="12" stroke="#8b1a1a" stroke-width="1.2" fill="#fdf2c4"/>
+        <circle cx="140" cy="18" r="6" fill="#8b6914"/>
+        <circle cx="140" cy="18" r="2" fill="#fdf2c4"/>
+        <g stroke="#8b6914">
+          <line x1="140" y1="2" x2="140" y2="8"/><line x1="140" y1="28" x2="140" y2="34"/>
+          <line x1="124" y1="18" x2="118" y2="18"/><line x1="156" y1="18" x2="162" y2="18"/>
+          <line x1="129" y1="7" x2="125" y2="3"/><line x1="151" y1="7" x2="155" y2="3"/>
+          <line x1="129" y1="29" x2="125" y2="33"/><line x1="151" y1="29" x2="155" y2="33"/>
+        </g>
+        <line x1="60" y1="18" x2="120" y2="18" stroke-dasharray="2,3"/>
+        <line x1="160" y1="18" x2="220" y2="18" stroke-dasharray="2,3"/>
+      </g>
+    </symbol>
+    <symbol id="orn-small" viewBox="0 0 60 60">
+      <g fill="none" stroke="#8b6914" stroke-width="1" stroke-linecap="round">
+        <path d="M 8,8 Q 18,10 22,20 Q 24,28 18,34 M 8,8 Q 14,18 8,26 M 22,16 Q 30,12 36,18"/>
+        <circle cx="12" cy="12" r="1.5" fill="#8b1a1a"/>
+        <circle cx="24" cy="24" r="1" fill="#1e3a8a"/>
+      </g>
+    </symbol>
+
+    <!-- arrowhead marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b6914"/>
+    </marker>
+    <marker id="arrow-crimson" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b1a1a"/>
+    </marker>
+  </defs>
+</svg>
+
+<div class="codex">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-frame">
+      <svg class="ornament-corner tl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner tr"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
+
+      <div class="eyebrow-latin">Codex Cloudflarensis · Volumen II · Folio I</div>
+      <div class="hero-rule"></div>
+      <h1 class="codex-title">De<br><span class="gilt">Architectura</span></h1>
+      <div class="hero-subtitle">Patterns · Theoria · Systemata</div>
+      <p class="hero-lede">
+        Conocer las primitivas es el principio. Saber <strong>componerlas</strong> es la maestría. Este volumen recoge los patrones de composición, las leyes distribuidas que los gobiernan, y los sistemas canonical que prueban su validez.
+      </p>
+      <nav class="toc">
+        <a href="#pars-i">I · Patrones</a>
+        <a href="#pars-ii">II · Teoremas</a>
+        <a href="#pars-iii">III · Systemata</a>
+        <a href="#pars-iv">IV · Arbor Decisionis</a>
+        <a href="#pars-v">V · Septem Peccata</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ PARS I — PATTERNS ============ -->
+  <section class="section" id="pars-i">
+    <div class="section-head">
+      <div class="section-num">I</div>
+      <div class="section-latin">Pars Prima</div>
+      <h2 class="section-title">Patrones de Composición</h2>
+      <p class="section-sub">Las recetas canonical para componer primitivas. Cada una nace de un problema concreto que ninguna primitiva sola resuelve bien.</p>
+    </div>
+
+    <div class="patterns">
+
+      <!-- 1 · CACHE-ASIDE -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · I</div>
+          <div class="pattern-name-latin">— Promptuarium Subsidiarium —</div>
+          <div class="pattern-name">Cache-Aside</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="120" r="22" class="dg-node-bg"/>
+              <text x="40" y="118" class="dg-node-label">CLIENT</text>
+              <text x="40" y="130" class="dg-node-latin">Cliens</text>
+
+              <circle cx="120" cy="120" r="24" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="120" y="118" class="dg-node-label">WORKER</text>
+              <text x="120" y="130" class="dg-node-latin">Operarius</text>
+
+              <circle cx="200" cy="60" r="22" class="dg-node-bg" fill="#d8e2f4"/>
+              <text x="200" y="58" class="dg-node-label">KV</text>
+              <text x="200" y="70" class="dg-node-latin">Cache</text>
+
+              <circle cx="200" cy="180" r="22" class="dg-node-bg" fill="#e8d8f4"/>
+              <text x="200" y="178" class="dg-node-label">D1</text>
+              <text x="200" y="190" class="dg-node-latin">Origo</text>
+
+              <path d="M 62 120 L 96 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 144 110 Q 170 80 178 70" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 178 70 Q 170 90 144 110" class="dg-arrow" stroke-dasharray="2,3"/>
+              <path d="M 144 130 Q 170 160 178 180" class="dg-arrow-bold" marker-end="url(#arrow-crimson)"/>
+              <text x="120" y="220" class="dg-text">1. Try cache · 2. Miss → DB · 3. Populate</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Worker pregunta a KV primero. Miss → consulta D1 → escribe a KV con TTL.</div>
+          </div>
+          <p>El patrón fundamental para proteger D1 contra carga viral. Reads frecuentes con datos que cambian poco viven en KV. Cache-aside porque <code>Worker</code> orquesta — no es write-through.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Reads ~10ms. D1 sólo se toca en miss. Escala a millones rps.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Stale data durante TTL window. Invalidación manual al escribir.</div>
+            </div>
+          </div>
+          <div class="use-case">SmartLinks redirect resolver · Feature flags · Product catalog · User profile reads</div>
+        </div>
+      </article>
+
+      <!-- 2 · WRITE-BEHIND -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · II</div>
+          <div class="pattern-name-latin">— Postscriptio Differta —</div>
+          <div class="pattern-name">Write-Behind</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="120" r="22" class="dg-node-bg"/>
+              <text x="40" y="118" class="dg-node-label">CLIENT</text>
+              <text x="40" y="130" class="dg-node-latin">Cliens</text>
+
+              <rect x="100" y="100" width="48" height="40" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="124" y="118" class="dg-node-label">DO</text>
+              <text x="124" y="132" class="dg-node-latin">In-Mem</text>
+
+              <circle cx="200" cy="120" r="22" class="dg-node-bg" fill="#e8d8f4"/>
+              <text x="200" y="118" class="dg-node-label">D1</text>
+              <text x="200" y="130" class="dg-node-latin">Persistens</text>
+
+              <path d="M 62 120 L 96 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 152 120 L 178 120" class="dg-arrow-bold" stroke-dasharray="3,4" marker-end="url(#arrow-crimson)"/>
+
+              <text x="124" y="78" class="dg-text">writes acumulan</text>
+              <text x="165" y="160" class="dg-text" font-size="10">flush · alarm 10s</text>
+
+              <circle cx="124" cy="60" r="6" fill="#d4a843" stroke="#8b6914"/>
+              <text x="124" y="62" font-size="8" fill="#1a0f05" text-anchor="middle" font-weight="700">⏰</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Writes acumulan en DO memoria, flush periódico (alarm) a D1.</div>
+          </div>
+          <p>El patrón canonical para counters virales. <code>DO.increment()</code> incrementa <code>this.count</code> en nanosegundos. Cada 10s, alarm dispara <code>flush()</code> que escribe el delta a D1. Single-writer guarantee del DO elimina race conditions.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Writes serializados sin lock. D1 ve 1 update/10s, no 10K/seg.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Si DO crashea entre flushes, pierdes hasta 10s de writes (mitigable con DO storage).</div>
+            </div>
+          </div>
+          <div class="use-case">Click counter · View counter · Rate limiter · Real-time dashboard metrics</div>
+        </div>
+      </article>
+
+      <!-- 3 · SAGA -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · III</div>
+          <div class="pattern-name-latin">— Itinerarium Saga —</div>
+          <div class="pattern-name">Distributed Saga</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <rect x="20" y="20" width="40" height="30" rx="3" class="dg-node-bg" fill="#d8f4e0"/>
+              <text x="40" y="38" class="dg-node-label">STEP 1</text>
+
+              <rect x="100" y="20" width="40" height="30" rx="3" class="dg-node-bg" fill="#d8f4e0"/>
+              <text x="120" y="38" class="dg-node-label">STEP 2</text>
+
+              <rect x="180" y="20" width="40" height="30" rx="3" class="dg-node-bg" fill="#d8f4e0"/>
+              <text x="200" y="38" class="dg-node-label">STEP 3</text>
+
+              <path d="M 60 35 L 96 35" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 140 35 L 176 35" class="dg-arrow" marker-end="url(#arrow)"/>
+
+              <rect x="180" y="100" width="40" height="30" rx="3" class="dg-node-bg" fill="#f4d8d8" stroke="#8b1a1a"/>
+              <text x="200" y="118" class="dg-node-label" fill="#8b1a1a">STEP 3 ✗</text>
+
+              <rect x="100" y="170" width="40" height="30" rx="3" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="120" y="188" class="dg-node-label">↶ COMP 2</text>
+
+              <rect x="20" y="170" width="40" height="30" rx="3" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="40" y="188" class="dg-node-label">↶ COMP 1</text>
+
+              <path d="M 200 50 L 200 96" class="dg-arrow-bold" marker-end="url(#arrow-crimson)"/>
+              <path d="M 180 115 Q 160 145 140 175" class="dg-arrow-bold" marker-end="url(#arrow-crimson)"/>
+              <path d="M 100 185 L 64 185" class="dg-arrow-bold" marker-end="url(#arrow-crimson)"/>
+
+              <text x="120" y="220" class="dg-text">forward · fail · compensate</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Workflow ejecuta steps con función de compensación por cada uno. Si step N falla, ejecuta compensaciones N-1 → 1 en reversa.</div>
+          </div>
+          <p>Para transacciones distribuidas (charge → ship → notify) que cruzan servicios sin 2PC. Cada step persiste resultado. Si <code>ship()</code> falla, ejecutas <code>refund()</code> (la compensación de <code>charge()</code>). El runtime garantiza que cada step se ejecuta exactamente una vez gracias al replay.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Atomicity sin lock distribuido. Sobrevive crashes, retoma desde último step.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Eventual atomicity (no instantánea). Compensaciones deben existir y ser idempotentes.</div>
+            </div>
+          </div>
+          <div class="use-case">Stripe charge + DB write + email · Order processing · Multi-step booking · LLM pipelines</div>
+        </div>
+      </article>
+
+      <!-- 4 · FAN-OUT -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · IV</div>
+          <div class="pattern-name-latin">— Diffusio Multiplex —</div>
+          <div class="pattern-name">Fan-Out</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="120" r="22" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="40" y="118" class="dg-node-label">PROD</text>
+              <text x="40" y="130" class="dg-node-latin">Origo</text>
+
+              <rect x="90" y="100" width="60" height="40" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+              <text x="120" y="118" class="dg-node-label">QUEUE</text>
+              <text x="120" y="130" class="dg-node-latin">Cursus</text>
+
+              <circle cx="200" cy="50" r="18" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="200" y="50" class="dg-node-label">C1</text>
+
+              <circle cx="200" cy="120" r="18" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="200" y="120" class="dg-node-label">C2</text>
+
+              <circle cx="200" cy="190" r="18" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="200" y="190" class="dg-node-label">C3</text>
+
+              <path d="M 62 120 L 86 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 150 110 Q 175 80 184 60" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 150 120 L 184 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 150 130 Q 175 160 184 180" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Producer escribe N mensajes a Queue, M consumers paralelos los procesan.</div>
+          </div>
+          <p>Decouple compute pesado del request path. Worker recibe webhook, encola N tareas, responde 200 inmediato. Queue distribuye batches a consumers que pueden tardar minutos. Throughput escala con número de consumers.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Latency request constante aunque trabajo crezca. Retry automático. Load smoothing.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Eventual processing. Idempotencia obligatoria (at-least-once). Visibility timeout tuning.</div>
+            </div>
+          </div>
+          <div class="use-case">Webhook delivery · Email sending · Image processing · Bulk imports · Notification fanout</div>
+        </div>
+      </article>
+
+      <!-- 5 · CQRS -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · V</div>
+          <div class="pattern-name-latin">— Distinctio Vocium —</div>
+          <div class="pattern-name">CQRS</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="60" r="20" class="dg-node-bg"/>
+              <text x="40" y="60" class="dg-node-label">WRITE</text>
+
+              <circle cx="40" cy="180" r="20" class="dg-node-bg"/>
+              <text x="40" y="180" class="dg-node-label">READ</text>
+
+              <rect x="100" y="40" width="60" height="40" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="130" y="58" class="dg-node-label">DO</text>
+              <text x="130" y="72" class="dg-node-latin">Dominus</text>
+
+              <rect x="100" y="160" width="60" height="40" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+              <text x="130" y="178" class="dg-node-label">KV</text>
+              <text x="130" y="192" class="dg-node-latin">Speculum</text>
+
+              <circle cx="200" cy="120" r="22" class="dg-node-bg" fill="#e8d8f4"/>
+              <text x="200" y="118" class="dg-node-label">D1</text>
+              <text x="200" y="132" class="dg-node-latin">Annales</text>
+
+              <path d="M 60 60 L 96 60" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 60 180 L 96 180" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 160 70 Q 180 95 192 110" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 192 130 Q 180 150 160 170" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+
+              <text x="120" y="120" class="dg-text" font-size="9">project</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Command Query Responsibility Segregation. Writes van por un path (DO), reads por otro (KV proyección).</div>
+          </div>
+          <p>Las queries de lectura son distintas a las de escritura. CQRS separa: <code>writes</code> serializan vía DO con strong consistency. <code>reads</code> consultan KV/D1 read-replicas con eventual consistency. La proyección de write a read state ocurre async vía Queue/Workflow.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Reads escalan independiente. Modelos de read optimizados (denormalizados, agregados).</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Complejidad arquitectural alta. Sync state lag entre write y read.</div>
+            </div>
+          </div>
+          <div class="use-case">High-read SaaS dashboards · E-commerce catalogs · Social feeds · Analytics-heavy products</div>
+        </div>
+      </article>
+
+      <!-- 6 · EVENT SOURCING -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · VI</div>
+          <div class="pattern-name-latin">— Annales Aeterni —</div>
+          <div class="pattern-name">Event Sourcing</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="60" r="18" class="dg-node-bg"/>
+              <text x="40" y="60" class="dg-node-label">CMD</text>
+
+              <rect x="90" y="40" width="60" height="40" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="120" y="58" class="dg-node-label">DO</text>
+              <text x="120" y="72" class="dg-node-latin">Custos</text>
+
+              <g>
+                <rect x="170" y="20" width="60" height="14" rx="2" class="dg-node-bg" fill="#fdf2c4"/>
+                <text x="200" y="30" class="dg-node-label" font-size="9">EVT 1</text>
+                <rect x="170" y="40" width="60" height="14" rx="2" class="dg-node-bg" fill="#fdf2c4"/>
+                <text x="200" y="50" class="dg-node-label" font-size="9">EVT 2</text>
+                <rect x="170" y="60" width="60" height="14" rx="2" class="dg-node-bg" fill="#fdf2c4"/>
+                <text x="200" y="70" class="dg-node-label" font-size="9">EVT 3</text>
+                <rect x="170" y="80" width="60" height="14" rx="2" class="dg-node-bg" fill="#fdf2c4"/>
+                <text x="200" y="90" class="dg-node-label" font-size="9">EVT 4</text>
+              </g>
+              <text x="200" y="115" class="dg-node-latin">append-only</text>
+
+              <rect x="90" y="160" width="60" height="40" rx="4" class="dg-node-bg" fill="#d8e2f4"/>
+              <text x="120" y="178" class="dg-node-label">STATE</text>
+              <text x="120" y="192" class="dg-node-latin">replay</text>
+
+              <path d="M 58 60 L 86 60" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 152 50 L 168 50" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 200 100 Q 200 140 152 175" class="dg-arrow" marker-end="url(#arrow)" stroke-dasharray="4,4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Estado se deriva replicando todos los eventos pasados. La fuente de verdad son los eventos, no el estado actual.</div>
+          </div>
+          <p>DO recibe comando, valida, emite evento, lo append-onlyea a su SQLite. Estado actual = <code>events.reduce(applyEvent, initialState)</code>. Replay reconstruye estado desde el log. Soporta time-travel debugging, audit log gratis, projections múltiples.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Audit log nativo. Time-travel. Múltiples projections del mismo log.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Replay caro si log enorme (snapshots ayudan). Schema evolution complicado.</div>
+            </div>
+          </div>
+          <div class="use-case">Banking/finance · Medical records · Game state · Document collaboration · Audit-heavy systems</div>
+        </div>
+      </article>
+
+      <!-- 7 · MULTI-TENANT ISOLATION -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · VII</div>
+          <div class="pattern-name-latin">— Tabernae Singulares —</div>
+          <div class="pattern-name">Multi-Tenant</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="120" cy="40" r="18" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="120" y="40" class="dg-node-label">ROUTER</text>
+
+              <rect x="20" y="100" width="50" height="40" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="45" y="118" class="dg-node-label">DO #A</text>
+              <text x="45" y="132" class="dg-node-latin">tenant A</text>
+
+              <rect x="95" y="100" width="50" height="40" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="120" y="118" class="dg-node-label">DO #B</text>
+              <text x="120" y="132" class="dg-node-latin">tenant B</text>
+
+              <rect x="170" y="100" width="50" height="40" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="195" y="118" class="dg-node-label">DO #C</text>
+              <text x="195" y="132" class="dg-node-latin">tenant C</text>
+
+              <path d="M 110 56 Q 80 80 50 96" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 120 60 L 120 96" class="dg-arrow" marker-end="url(#arrow)"/>
+              <path d="M 130 56 Q 160 80 190 96" class="dg-arrow" marker-end="url(#arrow)"/>
+
+              <text x="120" y="180" class="dg-text">Aislación per-tenant</text>
+              <text x="120" y="200" class="dg-text" font-style="normal" font-size="10">idFromName(tenantId)</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Cada tenant obtiene su propia DO instance. <code>env.TENANT.idFromName(tenantId)</code> garantiza aislación + single-writer.</div>
+          </div>
+          <p>El patrón nativo de CF para multi-tenant. Tenant A nunca interfiere con Tenant B porque viven en DOs distintos. Crash de DO de A no afecta a B. Storage SQLite local per-DO = aislación de datos. Workers for Platforms va más lejos: cada tenant deploya su propio Worker bajo tu control.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Aislación absoluta. Noisy neighbor imposible. Cost-per-tenant medible.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Cross-tenant queries complicadas (broadcasting). Migration de tenants pesada.</div>
+            </div>
+          </div>
+          <div class="use-case">SaaS B2B · Eigenatlas cirujanos · Cosalá hotels · Cualquier vertical multi-cliente</div>
+        </div>
+      </article>
+
+      <!-- 8 · AI ORCHESTRATION -->
+      <article class="pattern">
+        <svg class="pattern-corner tl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner tr"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner bl"><use href="#orn-small"/></svg>
+        <svg class="pattern-corner br"><use href="#orn-small"/></svg>
+        <div class="pattern-illum">
+          <div class="pattern-num">PATTERN · VIII</div>
+          <div class="pattern-name-latin">— Concilium Oraculorum —</div>
+          <div class="pattern-name">AI Orchestration</div>
+          <div class="pattern-diagram">
+            <svg viewBox="0 0 240 240">
+              <circle cx="40" cy="120" r="22" class="dg-node-bg" fill="#f4d8c9"/>
+              <text x="40" y="118" class="dg-node-label">WORKER</text>
+
+              <rect x="100" y="20" width="60" height="34" rx="4" class="dg-node-bg" fill="#e8d8f4"/>
+              <text x="130" y="38" class="dg-node-label">VECTOR</text>
+              <text x="130" y="50" class="dg-node-latin">RAG</text>
+
+              <rect x="100" y="70" width="60" height="34" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+              <text x="130" y="88" class="dg-node-label">GATEWAY</text>
+              <text x="130" y="100" class="dg-node-latin">Cache</text>
+
+              <rect x="100" y="120" width="60" height="34" rx="4" class="dg-node-bg" fill="#f4d8d8"/>
+              <text x="130" y="138" class="dg-node-label">LLM</text>
+              <text x="130" y="150" class="dg-node-latin">Oraculum</text>
+
+              <rect x="100" y="170" width="60" height="34" rx="4" class="dg-node-bg" fill="#d8f4e0"/>
+              <text x="130" y="188" class="dg-node-label">SANDBOX</text>
+              <text x="130" y="200" class="dg-node-latin">Officina</text>
+
+              <path d="M 62 120 Q 80 50 100 38" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 62 120 Q 80 100 100 88" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 62 120 L 100 137" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+              <path d="M 62 120 Q 80 175 100 188" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div>
+            <div class="block-label">Esencia</div>
+            <div class="essence">Worker orquesta: Vectorize (RAG context) + AI Gateway (LLM call con cache) + Sandbox (ejecuta código generado).</div>
+          </div>
+          <p>El patrón canonical para AI agents serios. <code>Vectorize</code> recupera contexto semántico relevante. <code>AI Gateway</code> cachea respuestas idénticas (40% hit ratio típico) y mide costos. <code>Workers AI</code> o LLM externo genera respuesta. Si la respuesta es código, <code>Sandbox SDK</code> lo ejecuta en aislamiento. <code>Workflow</code> envuelve todo si es multi-turn con state durable.</p>
+          <div class="tradeoffs">
+            <div class="tradeoff pro">
+              <div class="tr-label">Pro</div>
+              <div class="tr-body">Type-safe. Observability nativa (Gateway logs). Cache reduce costos LLM ~40%.</div>
+            </div>
+            <div class="tradeoff con">
+              <div class="tr-label">Con</div>
+              <div class="tr-body">Latency cumulativa (RAG + LLM + tool calls). Cost per request alta vs llamada directa.</div>
+            </div>
+          </div>
+          <div class="use-case">Chatbots con knowledge base · Code generation agents · RAG systems · LLM-driven workflows</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ PARS II — THEORY ============ -->
+  <section class="section" id="pars-ii">
+    <div class="section-head">
+      <div class="section-num">II</div>
+      <div class="section-latin">Pars Secunda</div>
+      <h2 class="section-title">Teoremas Distribuidos</h2>
+      <p class="section-sub">Las leyes que gobiernan por qué cada primitiva existe. No las inventaron en Cloudflare — las descubrieron en los 70s-80s, y todo sistema serverless las honra.</p>
+    </div>
+
+    <div class="theorems">
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">C</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Theorema CAP —</div>
+            <div class="theorem-title">Consistency · Availability · Partition</div>
+          </div>
+        </div>
+        <p class="axiom">"En presencia de partición de red, un sistema distribuido elige entre consistencia y disponibilidad. No las tres juntas." — Eric Brewer, 2000</p>
+        <p>Cuando dos nodos pierden contacto entre sí (partición), el sistema enfrenta un dilema: <strong>aceptar writes sólo en uno de ellos (CP, sacrificando disponibilidad en el otro)</strong> o <strong>aceptar writes en ambos (AP, sacrificando consistencia momentánea)</strong>. CP y AP son las únicas opciones bajo partición.</p>
+        <p>Aplicación al stack: <strong>D1</strong> es CP (single primary, partición → writes detenidos en replica). <strong>KV</strong> es AP (cualquier PoP acepta writes, propagan eventualmente). <strong>DO</strong> es CP per-ID (single-writer global, partición → DO espera). Saber esto explica por qué KV puede mostrar valores stale 60s después de un write — es la elección consciente AP.</p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">P</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Lex PACELC —</div>
+            <div class="theorem-title">Refinamiento de CAP</div>
+          </div>
+        </div>
+        <p class="axiom">"Si Partition (P), elige Availability (A) o Consistency (C). Else (E), elige Latency (L) o Consistency (C)." — Daniel Abadi, 2010</p>
+        <p>CAP sólo describe partición. PACELC añade: <strong>fuera de partición</strong>, sigue habiendo tradeoff entre latencia y consistencia. Para responder rápido, replicas leen sin consultar primary (consistency lag). Para consistencia fuerte, esperan al primary (latency).</p>
+        <p>Por eso D1 read replicas pueden retornar datos ~10s atrasados respecto al primary. No es bug — es la elección PACELC: prefieren latencia baja en lectura sobre frescura absoluta. KV es PA/EL (eventual + low latency). DO es PC/EC (strong + sacrifica latencia para garantizar serialización).</p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">I</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Lex Idempotentiae —</div>
+            <div class="theorem-title">Operación Idempotente</div>
+          </div>
+        </div>
+        <p class="axiom">"Una operación es idempotente si ejecutarla N veces produce el mismo resultado que ejecutarla una vez."</p>
+        <p>Queue garantiza <strong>at-least-once delivery</strong>. Esto significa que tu consumer puede recibir el mismo mensaje 2-N veces. Si tu handler hace <code>charge_credit_card(amount)</code> sin idempotency key, cobrarás 2-N veces.</p>
+        <p>Solución: cada operación incluye un <strong>idempotency key</strong> único. El consumer guarda keys procesados (en KV con TTL, o D1). Si el key ya fue visto, retorna el resultado cacheado sin reejecutar. Esta ley aplica a Workflows (steps deben ser idempotentes para replay), Queues (retry), DO RPC (network reintentos). <strong>Sin idempotencia, los sistemas distribuidos corrompen estado silenciosamente.</strong></p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">L</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Tempus Logicum —</div>
+            <div class="theorem-title">Lamport Timestamps</div>
+          </div>
+        </div>
+        <p class="axiom">"En sistemas distribuidos, no existe un 'ahora' global. Sólo existe el orden causal entre eventos." — Leslie Lamport, 1978</p>
+        <p>Dos eventos en máquinas distintas no pueden compararse por reloj físico (clocks drift). Lamport propuso: cada nodo lleva un contador local, lo incrementa en cada evento, lo envía con cada mensaje. Recipiente toma <code>max(local, recibido) + 1</code>.</p>
+        <p>Resultado: orden parcial entre eventos relacionados causalmente, sin necesidad de reloj global. Implicación práctica: cuando coordinas DOs distintos, no asumas orden temporal estricto entre sus operaciones — sólo el orden establecido por mensajes explícitos. CRDTs (próximo teorema) usan vector clocks (Lamport extendido) para resolver merges.</p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">R</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Concordia Sine Conflictu —</div>
+            <div class="theorem-title">Conflict-free Replicated Data Types</div>
+          </div>
+        </div>
+        <p class="axiom">"Estructuras de datos que pueden ser replicadas y modificadas concurrentemente sin coordinación, garantizando convergencia eventual."</p>
+        <p>Ciertas operaciones se mergean automáticamente sin conflict: <strong>increment counters</strong>, <strong>add-only sets</strong>, <strong>last-write-wins registers</strong>. Si N replicas modifican concurrent y luego sincronizan, todas convergen al mismo estado sin lock.</p>
+        <p>KV no implementa CRDTs nativamente — por eso increment falla. DO sí soporta esta lógica si tú la implementas (single-writer hace CRDT trivial). Yjs y Automerge son CRDTs populares para colaboración real-time. Si tu producto es colaborativo (docs, whiteboards), CRDT + DO + WebSockets es la receta.</p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">B</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Lex BASE —</div>
+            <div class="theorem-title">Basically Available, Soft state, Eventual consistency</div>
+          </div>
+        </div>
+        <p class="axiom">"Alternativa a ACID para sistemas distribuidos: tolerar inconsistencia momentánea a cambio de disponibilidad."</p>
+        <p>ACID (Atomic, Consistent, Isolated, Durable) es la base de DBs tradicionales — Postgres, MySQL. BASE relaja consistency: el sistema siempre responde (BA), el state puede cambiar sin input directo (S — propagación), eventualmente todos los nodos convergen (E).</p>
+        <p>KV es BASE puro. DynamoDB también. D1 intenta ACID (vía SQLite). DO es ACID per-instance (single-writer simplifica). Saber qué primitiva opera bajo qué modelo determina cómo razonas sobre tu state. <strong>Mezclar mental models ACID con sistemas BASE es la fuente #1 de bugs distribuidos.</strong></p>
+      </article>
+
+      <article class="theorem">
+        <div class="theorem-head">
+          <div class="theorem-mark">2</div>
+          <div class="theorem-title-block">
+            <div class="theorem-latin">— Pactum Duarum Phasium —</div>
+            <div class="theorem-title">Two-Phase Commit (y por qué Saga lo reemplaza)</div>
+          </div>
+        </div>
+        <p class="axiom">"Atomicity distribuida vía coordinación bloqueante."</p>
+        <p>2PC fue el approach clásico: un coordinator pregunta a todos los participants "¿pueden commit?", luego envía "commit" si todos dijeron sí. Problema: si coordinator crashea entre fases, participants quedan bloqueados indefinidamente. No escala.</p>
+        <p>Saga (Pattern III) reemplaza 2PC en sistemas modernos. En vez de bloquear hasta confirmar, ejecuta steps secuenciales con compensaciones. Ofrece <strong>eventual atomicity</strong> en vez de strong atomicity. Cloudflare nunca ofreció 2PC porque no escala — Workflow es la implementación canonical de Saga en CF.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ PARS III — REFERENCE SYSTEMS ============ -->
+  <section class="section" id="pars-iii">
+    <div class="section-head">
+      <div class="section-num">III</div>
+      <div class="section-latin">Pars Tertia</div>
+      <h2 class="section-title">Sistemas de Referencia</h2>
+      <p class="section-sub">Arquitecturas canonical que ejercitan los patrones y teoremas. Si dominas estas, dominas el stack.</p>
+    </div>
+
+    <!-- REFSYS 1: SmartLinks -->
+    <div class="reference-system">
+      <div class="refsys-head">
+        <div class="refsys-num">I</div>
+        <div class="refsys-latin">— Forma Brevis —</div>
+        <div class="refsys-title">SmartLinks · URL Shortener</div>
+      </div>
+
+      <div class="refsys-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="200" r="28" class="dg-node-bg"/>
+          <text x="60" y="198" class="dg-node-label">CLIENT</text>
+          <text x="60" y="212" class="dg-node-latin">Cliens</text>
+
+          <rect x="150" y="170" width="80" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="190" y="195" class="dg-node-label">WORKER</text>
+          <text x="190" y="210" class="dg-node-latin">api-tRPC</text>
+
+          <rect x="290" y="80" width="80" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="330" y="100" class="dg-node-label">KV</text>
+          <text x="330" y="115" class="dg-node-latin">link cache</text>
+
+          <rect x="290" y="160" width="80" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="330" y="180" class="dg-node-label">D1</text>
+          <text x="330" y="195" class="dg-node-latin">links DB</text>
+
+          <rect x="290" y="240" width="80" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="330" y="260" class="dg-node-label">DO</text>
+          <text x="330" y="275" class="dg-node-latin">click counter</text>
+
+          <rect x="430" y="160" width="80" height="50" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="470" y="180" class="dg-node-label">QUEUE</text>
+          <text x="470" y="195" class="dg-node-latin">analytics</text>
+
+          <rect x="570" y="100" width="80" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="610" y="120" class="dg-node-label">CONSUMER</text>
+          <text x="610" y="135" class="dg-node-latin">Worker</text>
+
+          <rect x="570" y="180" width="80" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="610" y="200" class="dg-node-label">AI WF</text>
+          <text x="610" y="215" class="dg-node-latin">link analyze</text>
+
+          <rect x="570" y="260" width="80" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="610" y="280" class="dg-node-label">D1</text>
+          <text x="610" y="295" class="dg-node-latin">events</text>
+
+          <rect x="710" y="180" width="80" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="750" y="200" class="dg-node-label">BROWSER</text>
+          <text x="750" y="215" class="dg-node-latin">Render</text>
+
+          <path d="M 88 200 L 146 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 230 185 Q 260 130 286 110" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 230 200 L 286 185" class="dg-arrow dg-flow" marker-end="url(#arrow)" stroke-dasharray="3,3"/>
+          <path d="M 230 215 Q 260 250 286 265" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 370 265 Q 400 230 426 195" class="dg-arrow-bold dg-flow" marker-end="url(#arrow-crimson)"/>
+          <path d="M 510 175 Q 540 145 566 125" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 510 200 L 566 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 510 220 Q 540 255 566 280" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 650 205 L 706 205" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+
+          <text x="100" y="170" class="dg-text" font-size="10">GET /r/:slug</text>
+          <text x="400" y="350" class="dg-text">DO flush click count → Queue → Consumer → D1 events</text>
+        </svg>
+      </div>
+
+      <div class="refsys-walkthrough">
+        <div class="walkthrough-step"><div class="step-num">I</div><div><strong>Request</strong> — cliente pega <code>/r/promo</code>. Worker tRPC recibe.</div></div>
+        <div class="walkthrough-step"><div class="step-num">II</div><div><strong>Lookup</strong> — Worker pregunta KV con <code>link:promo</code>. Hit (99%) → resuelve. Miss → consulta D1 + populate KV con TTL 1h.</div></div>
+        <div class="walkthrough-step"><div class="step-num">III</div><div><strong>Geo-route</strong> — Worker lee <code>cf.country</code>, aplica regla de redirect específica del país, devuelve 302.</div></div>
+        <div class="walkthrough-step"><div class="step-num">IV</div><div><strong>Click counter</strong> — Worker llama <code>env.COUNTER.idFromName(slug).increment()</code>. DO acumula in-memory.</div></div>
+        <div class="walkthrough-step"><div class="step-num">V</div><div><strong>Async analytics</strong> — DO alarm cada 30s flush count + envía evento detallado a Queue.</div></div>
+        <div class="walkthrough-step"><div class="step-num">VI</div><div><strong>Consumer</strong> — Worker queue-consumer agrega events a D1 (events table). Workflow AI corre periódicamente sobre links: Browser Rendering captura preview, Workers AI analiza safety/topic, escribe metadata.</div></div>
+        <div class="walkthrough-step"><div class="step-num">VII</div><div><strong>Patrones aplicados</strong> — Cache-aside (II), Write-behind (IV), Fan-out (V), AI Orchestration (VI). Cuatro patrones, un sistema.</div></div>
+      </div>
+    </div>
+
+    <!-- REFSYS 2: Real-time Chat -->
+    <div class="reference-system">
+      <div class="refsys-head">
+        <div class="refsys-num">II</div>
+        <div class="refsys-latin">— Sermo Vivus —</div>
+        <div class="refsys-title">Real-Time Chat / Collaboration</div>
+      </div>
+
+      <div class="refsys-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="100" r="22" class="dg-node-bg"/>
+          <text x="60" y="100" class="dg-node-label">USER A</text>
+
+          <circle cx="60" cy="200" r="22" class="dg-node-bg"/>
+          <text x="60" y="200" class="dg-node-label">USER B</text>
+
+          <circle cx="60" cy="300" r="22" class="dg-node-bg"/>
+          <text x="60" y="300" class="dg-node-label">USER C</text>
+
+          <rect x="160" y="170" width="80" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="200" y="195" class="dg-node-label">WORKER</text>
+          <text x="200" y="210" class="dg-node-latin">router</text>
+
+          <rect x="320" y="80" width="100" height="80" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="370" y="110" class="dg-node-label">DO #room1</text>
+          <text x="370" y="128" class="dg-node-latin">In-Mem state</text>
+          <text x="370" y="145" class="dg-node-latin">+ SQLite</text>
+
+          <rect x="320" y="220" width="100" height="80" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="370" y="250" class="dg-node-label">DO #room2</text>
+          <text x="370" y="268" class="dg-node-latin">In-Mem state</text>
+          <text x="370" y="285" class="dg-node-latin">+ SQLite</text>
+
+          <rect x="500" y="60" width="80" height="40" rx="4" class="dg-node-bg" fill="#fdf2c4"/>
+          <text x="540" y="78" class="dg-node-label">WS</text>
+          <text x="540" y="92" class="dg-node-latin">User A</text>
+
+          <rect x="500" y="120" width="80" height="40" rx="4" class="dg-node-bg" fill="#fdf2c4"/>
+          <text x="540" y="138" class="dg-node-label">WS</text>
+          <text x="540" y="152" class="dg-node-latin">User B</text>
+
+          <rect x="500" y="240" width="80" height="40" rx="4" class="dg-node-bg" fill="#fdf2c4"/>
+          <text x="540" y="258" class="dg-node-label">WS</text>
+          <text x="540" y="272" class="dg-node-latin">User C</text>
+
+          <rect x="650" y="180" width="80" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="690" y="200" class="dg-node-label">D1</text>
+          <text x="690" y="215" class="dg-node-latin">history</text>
+
+          <path d="M 82 100 Q 120 130 156 175" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 82 200 L 156 200" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 82 300 Q 120 270 156 225" class="dg-arrow" marker-end="url(#arrow)"/>
+
+          <path d="M 240 195 Q 280 145 316 120" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 240 205 Q 280 245 316 260" class="dg-arrow" marker-end="url(#arrow)"/>
+
+          <path d="M 420 100 L 496 80" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 420 130 L 496 140" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 420 260 L 496 260" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+
+          <path d="M 420 145 Q 540 200 650 200" class="dg-arrow-bold" marker-end="url(#arrow-crimson)" stroke-dasharray="4,4"/>
+
+          <text x="370" y="195" class="dg-text" font-size="10">broadcast</text>
+          <text x="540" y="350" class="dg-text">DO hibernates · WebSockets persist</text>
+        </svg>
+      </div>
+
+      <div class="refsys-walkthrough">
+        <div class="walkthrough-step"><div class="step-num">I</div><div><strong>Connect</strong> — Cada user abre WebSocket a Worker, que upgradea a DO específico (<code>idFromName(roomId)</code>). Patrón Multi-tenant (VII).</div></div>
+        <div class="walkthrough-step"><div class="step-num">II</div><div><strong>Hibernation</strong> — DO mantiene WebSockets abiertos pero <strong>libera memoria entre mensajes</strong>. Sólo paga compute por evento real, no por conexión idle.</div></div>
+        <div class="walkthrough-step"><div class="step-num">III</div><div><strong>Message broadcast</strong> — User A envía. DO recibe vía WebSocket. Single-writer guarantee garantiza orden serializado. DO emite a todos los WebSockets conectados.</div></div>
+        <div class="walkthrough-step"><div class="step-num">IV</div><div><strong>Persistence</strong> — DO también append-onlyea a su SQLite local (Event Sourcing, Pattern VI). Para history queries cross-room, replica async a D1.</div></div>
+        <div class="walkthrough-step"><div class="step-num">V</div><div><strong>Why DO not Pub/Sub</strong> — DO ofrece orden total dentro de un room (single-writer). Pub/Sub no garantiza orden entre subs. Para chat, orden importa.</div></div>
+      </div>
+    </div>
+
+    <!-- REFSYS 3: AI Agent -->
+    <div class="reference-system">
+      <div class="refsys-head">
+        <div class="refsys-num">III</div>
+        <div class="refsys-latin">— Servus Sapiens —</div>
+        <div class="refsys-title">AI Agent · Multi-Step LLM</div>
+      </div>
+
+      <div class="refsys-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="200" r="22" class="dg-node-bg"/>
+          <text x="60" y="200" class="dg-node-label">USER</text>
+
+          <rect x="140" y="170" width="80" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="180" y="195" class="dg-node-label">WORKER</text>
+          <text x="180" y="210" class="dg-node-latin">api</text>
+
+          <rect x="280" y="160" width="120" height="80" rx="6" class="dg-node-bg" fill="#3d2a18" stroke="#d4a843" stroke-width="2"/>
+          <text x="340" y="190" class="dg-node-label" fill="#fdf2c4">WORKFLOW</text>
+          <text x="340" y="208" class="dg-node-latin" fill="#d4a843">Ordo Operum</text>
+
+          <rect x="460" y="40" width="80" height="44" rx="4" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="500" y="58" class="dg-node-label">VECTOR</text>
+          <text x="500" y="72" class="dg-node-latin">RAG</text>
+
+          <rect x="460" y="100" width="80" height="44" rx="4" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="500" y="118" class="dg-node-label">GATEWAY</text>
+          <text x="500" y="132" class="dg-node-latin">cache</text>
+
+          <rect x="460" y="160" width="80" height="44" rx="4" class="dg-node-bg" fill="#f4d8d8"/>
+          <text x="500" y="178" class="dg-node-label">LLM</text>
+          <text x="500" y="192" class="dg-node-latin">claude/gpt</text>
+
+          <rect x="460" y="220" width="80" height="44" rx="4" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="500" y="238" class="dg-node-label">SANDBOX</text>
+          <text x="500" y="252" class="dg-node-latin">tool exec</text>
+
+          <rect x="460" y="280" width="80" height="44" rx="4" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="500" y="298" class="dg-node-label">BROWSER</text>
+          <text x="500" y="312" class="dg-node-latin">scrape</text>
+
+          <rect x="600" y="170" width="80" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="640" y="190" class="dg-node-label">DO</text>
+          <text x="640" y="205" class="dg-node-latin">conversation</text>
+
+          <rect x="710" y="170" width="80" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="750" y="190" class="dg-node-label">D1</text>
+          <text x="750" y="205" class="dg-node-latin">history</text>
+
+          <path d="M 82 200 L 136 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 220 200 L 276 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 175 Q 430 100 456 62" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 190 Q 430 150 456 122" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 200 L 456 180" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 215 Q 430 230 456 240" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 230 Q 430 280 456 300" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 200 L 596 195" class="dg-arrow-bold" marker-end="url(#arrow-crimson)"/>
+          <path d="M 680 195 L 706 195" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+
+          <text x="340" y="370" class="dg-text">Workflow orquesta steps. DO mantiene conversation context. Steps idempotentes para replay.</text>
+        </svg>
+      </div>
+
+      <div class="refsys-walkthrough">
+        <div class="walkthrough-step"><div class="step-num">I</div><div><strong>Request</strong> — User envía mensaje. Worker valida + invoca Workflow con <code>conversationId</code>.</div></div>
+        <div class="walkthrough-step"><div class="step-num">II</div><div><strong>Step 1: RAG</strong> — Workflow consulta Vectorize con embedding de la pregunta. Recupera top-K documentos relevantes.</div></div>
+        <div class="walkthrough-step"><div class="step-num">III</div><div><strong>Step 2: LLM</strong> — Workflow envía prompt + RAG context vía AI Gateway. Si la query exacta fue cacheada, retorna sin tocar LLM (40% hit ratio típico).</div></div>
+        <div class="walkthrough-step"><div class="step-num">IV</div><div><strong>Step 3: Tool calls</strong> — LLM puede pedir ejecutar código (Sandbox) o scrape web (Browser Rendering). Workflow ejecuta, alimenta resultado de vuelta al LLM.</div></div>
+        <div class="walkthrough-step"><div class="step-num">V</div><div><strong>Step 4: Persistence</strong> — DO guarda mensaje + respuesta en conversation state (single-writer per conversation). D1 archiva para history queries.</div></div>
+        <div class="walkthrough-step"><div class="step-num">VI</div><div><strong>Durability</strong> — Si Worker crashea mid-Workflow, replay desde último step exitoso. Pasos idempotentes (Idempotency theorem). Conversation state intacto en DO.</div></div>
+        <div class="walkthrough-step"><div class="step-num">VII</div><div><strong>Patterns aplicados</strong> — Saga (III), Multi-tenant per conversation (VII), AI Orchestration (VIII), Event Sourcing en DO (VI).</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ PARS IV — DECISION TREE ============ -->
+  <section class="section" id="pars-iv">
+    <div class="section-head">
+      <div class="section-num">IV</div>
+      <div class="section-latin">Pars Quarta</div>
+      <h2 class="section-title">Arbor Decisionis</h2>
+      <p class="section-sub">El árbol de decisión completo. Cuando enfrentas un nuevo requirement, recorrelo de arriba a abajo.</p>
+    </div>
+
+    <div class="decision-wrap">
+      <div class="decision-tree">
+
+        <div class="dt-question">¿Necesitas ejecutar lógica?</div>
+        <div class="dt-branch">
+          <div class="dt-question">¿La lógica termina en segundos?</div>
+          <div class="dt-branch">
+            <div class="dt-answer"><span class="arrow">→</span><span>Sí, stateless</span><span class="dt-result">Worker</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Sí, pero necesita state per-entidad</span><span class="dt-result">Durable Object</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Necesita binarios pesados / GPU / Python nativo</span><span class="dt-result">Containers</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Es código no-confiable (LLM-generated, user code)</span><span class="dt-result">Sandbox SDK</span></div>
+          </div>
+          <div class="dt-question">¿La lógica dura minutos/horas/días?</div>
+          <div class="dt-branch">
+            <div class="dt-answer"><span class="arrow">→</span><span>Sí, multi-step que debe sobrevivir crashes</span><span class="dt-result">Workflow</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Sí, pero es solo "fire and forget" async</span><span class="dt-result">Queue</span></div>
+          </div>
+        </div>
+
+        <div class="dt-question">¿Necesitas guardar datos?</div>
+        <div class="dt-branch">
+          <div class="dt-question">¿Qué patrón de acceso?</div>
+          <div class="dt-branch">
+            <div class="dt-answer"><span class="arrow">→</span><span>Read-heavy, cambia poco, eventual OK</span><span class="dt-result">KV (cache-aside con D1)</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>SQL relacional, joins, transactions</span><span class="dt-result">D1</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Strong consistency per-entity, hot writes</span><span class="dt-result">Durable Object</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Blobs, archivos, media pesada</span><span class="dt-result">R2</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Vectores para semantic search / RAG</span><span class="dt-result">Vectorize</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Time-series events para analytics</span><span class="dt-result">Analytics Engine</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>Cache HTTP edge clásico</span><span class="dt-result">Cache API</span></div>
+            <div class="dt-answer"><span class="arrow">→</span><span>DB Postgres/MySQL existente</span><span class="dt-result">Hyperdrive (no migrar)</span></div>
+          </div>
+        </div>
+
+        <div class="dt-question">¿Necesitas comunicación entre componentes?</div>
+        <div class="dt-branch">
+          <div class="dt-answer"><span class="arrow">→</span><span>Worker → Worker, sync, mismo account</span><span class="dt-result">Service Bindings RPC</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Worker → Worker async, decoupled</span><span class="dt-result">Queue</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Real-time bidirectional con state</span><span class="dt-result">DO + WebSockets</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Multi-step durable orchestration</span><span class="dt-result">Workflow</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Recibir email entrante</span><span class="dt-result">Email Workers</span></div>
+        </div>
+
+        <div class="dt-question">¿Necesitas inteligencia / AI?</div>
+        <div class="dt-branch">
+          <div class="dt-answer"><span class="arrow">→</span><span>Inferencia simple, modelos open-source</span><span class="dt-result">Workers AI</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>LLM externo (Claude/GPT) con cache + obs</span><span class="dt-result">AI Gateway → LLM</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Búsqueda semántica</span><span class="dt-result">Vectorize + Workers AI embeddings</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>RAG completo</span><span class="dt-result">AutoRAG ó Vectorize + Workers</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Agent multi-step con tools</span><span class="dt-result">Workflow + Gateway + Sandbox</span></div>
+        </div>
+
+        <div class="dt-question">¿Multi-tenancy?</div>
+        <div class="dt-branch">
+          <div class="dt-answer"><span class="arrow">→</span><span>Aislación absoluta per tenant</span><span class="dt-result">DO per tenant</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Tenants deployan SU código en TU plataforma</span><span class="dt-result">Workers for Platforms</span></div>
+          <div class="dt-answer"><span class="arrow">→</span><span>Aislación lógica suficiente</span><span class="dt-result">D1 con tenant_id column + RLS-style</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ PARS V — SEPTEM PECCATA ============ -->
+  <section class="section" id="pars-v">
+    <div class="section-head">
+      <div class="section-num">V</div>
+      <div class="section-latin">Pars Quinta</div>
+      <h2 class="section-title">Septem Peccata Capitalia</h2>
+      <p class="section-sub">Los siete pecados arquitectónicos que cometen quienes no leyeron este codex. Evítalos.</p>
+    </div>
+
+    <div class="sins-grid">
+
+      <article class="sin">
+        <div class="sin-num">I</div>
+        <div class="sin-latin">— Computatio Falsa —</div>
+        <div class="sin-title">KV como Counter</div>
+        <div class="sin-body"><strong>El pecado:</strong> usar KV.get + increment + KV.put para contar. <strong>El castigo:</strong> race conditions silenciosas que pierden 30-80% bajo carga, más rate limit 1 write/sec/key. <strong>La penitencia:</strong> Durable Object con write-behind.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">II</div>
+        <div class="sin-latin">— Origo Sine Velo —</div>
+        <div class="sin-title">D1 Sin Cache</div>
+        <div class="sin-body"><strong>El pecado:</strong> dejar Worker leyendo D1 en cada request sin KV cache-aside. <strong>El castigo:</strong> primary saturado con 1K writes/sec límite, replicas stale, latencia variable. <strong>La penitencia:</strong> cache-aside disciplinado con TTL apropiado.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">III</div>
+        <div class="sin-latin">— Custos Universalis —</div>
+        <div class="sin-title">DO como Cache Global</div>
+        <div class="sin-body"><strong>El pecado:</strong> usar UN solo Durable Object como cache "global" del sistema. <strong>El castigo:</strong> single-writer guarantee se vuelve cuello de botella global, todo serializa en un isolate. <strong>La penitencia:</strong> KV para cache global, DO sólo para coordinación per-entidad.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">IV</div>
+        <div class="sin-latin">— Iteratio Sine Idempotentia —</div>
+        <div class="sin-title">Queue Sin Idempotencia</div>
+        <div class="sin-body"><strong>El pecado:</strong> consumer de Queue sin idempotency key (charge_card, send_email). <strong>El castigo:</strong> at-least-once delivery duplica operaciones, cargas dobles, emails repetidos. <strong>La penitencia:</strong> idempotency_key persistido + check antes de actuar.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">V</div>
+        <div class="sin-latin">— Replicatio Inconstans —</div>
+        <div class="sin-title">Workflow Steps No-Determinísticos</div>
+        <div class="sin-body"><strong>El pecado:</strong> usar <code>Date.now()</code>, <code>Math.random()</code>, o llamadas externas no-cacheadas dentro de un step. <strong>El castigo:</strong> replay genera valores distintos, state divergente, bugs imposibles de reproducir. <strong>La penitencia:</strong> capturar valores no-determinísticos en su propio step.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">VI</div>
+        <div class="sin-latin">— Connexio Frigida —</div>
+        <div class="sin-title">Postgres Sin Hyperdrive</div>
+        <div class="sin-body"><strong>El pecado:</strong> Worker abre nueva conexión TCP a Postgres en cada request. <strong>El castigo:</strong> handshake TLS + auth por request = 50-200ms overhead, primary se queda sin conexiones bajo carga. <strong>La penitencia:</strong> Hyperdrive — connection pool warm + query cache.</div>
+      </article>
+
+      <article class="sin">
+        <div class="sin-num">VII</div>
+        <div class="sin-latin">— Confusio Modelorum —</div>
+        <div class="sin-title">Mezclar ACID y BASE</div>
+        <div class="sin-body"><strong>El pecado:</strong> razonar sobre KV como si fuera ACID (esperando read-after-write strong). <strong>El castigo:</strong> bugs intermitentes que aparecen sólo bajo carga global, "funciona en local". <strong>La penitencia:</strong> saber qué primitiva es ACID (D1, DO) vs BASE (KV) y diseñar acorde.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ EPILOGUE ============ -->
+  <section class="section">
+    <div class="epilogue">
+      <div class="epilogue-mark">❦</div>
+      <div class="epilogue-title">Epilogo</div>
+      <div class="epilogue-latin">De Architecto Sapiente</div>
+      <p>El arquitecto novato pregunta "¿qué primitiva uso?". El arquitecto formado pregunta "¿qué tradeoff domina mi requirement?" — y la primitiva se vuelve consecuencia mecánica.</p>
+      <p>Las primitivas son notas. Los patrones son escalas. Los teoremas son armonía. Los sistemas de referencia son sinfonías ya escritas. <strong>Construir arquitectura es componer música — no copiar partituras.</strong></p>
+      <p>El estudio nunca termina. Cada año Cloudflare añade primitivas (Containers, Sandbox, AutoRAG) y cada nueva primitiva expande el espacio de composiciones posibles. Mantén el codex vivo: revísalo trimestralmente, contrasta tus diseños contra los siete pecados, y mide tus elecciones por sus tradeoffs reales — no por su elegancia aparente.</p>
+    </div>
+
+    <div class="colophon">
+      <div class="colophon-mark">⁘ ❦ ⁘</div>
+      <div class="colophon-text">Volumen II compositus · Anno Domini MMXXVI · In nomine Cloudflarensis · Ad maiorem architecturae gloriam</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.pattern, .theorem, .reference-system, .sin, .decision-wrap, .epilogue, .hero-frame').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    }
+  );
+});
+</script>
+
+</body>
+</html>

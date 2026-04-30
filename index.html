@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex Cloudflarensis · Bibliotheca</title>
+<meta name="description" content="Codex iluminado sobre primitivas y arquitectura de Cloudflare. Manuscrito digital en estilo griego-renacentista.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root {
+  --parchment: #f1e4c4;
+  --parchment-light: #f9efd1;
+  --parchment-dark: #e6d4a8;
+  --parchment-shadow: #c9b685;
+  --ink: #1a0f05;
+  --ink-soft: #3d2a18;
+  --ink-faded: #6b5236;
+  --gold-2: #d4a843;
+  --gold-3: #f5d574;
+  --gold-deep: #8b6914;
+  --crimson: #8b1a1a;
+  --crimson-deep: #5e0f0f;
+  --lapis: #1e3a8a;
+  --lapis-deep: #0d1f5c;
+  --azurite: #2a5298;
+  --vellum-rule: rgba(26, 15, 5, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 105, 20, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.28   0 0 0 0 0.1   0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: cover, cover, 400px 400px;
+  background-attachment: fixed;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 15, 5, 0.18) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 48px 120px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px 0 80px;
+}
+
+.hero-frame {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  padding: 80px 64px;
+}
+
+.ornament-corner {
+  position: absolute;
+  width: 90px; height: 90px;
+  pointer-events: none;
+}
+.ornament-corner.tl { top: 0; left: 0; }
+.ornament-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner.br { bottom: 0; right: 0; transform: scale(-1); }
+
+.eyebrow-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.hero-rule {
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  margin: 0 auto 32px;
+}
+
+h1 {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 76px);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+h1 .gilt {
+  display: inline-block;
+  font-size: 0.78em;
+  letter-spacing: 0.01em;
+  background: linear-gradient(180deg, var(--gold-3) 0%, var(--gold-2) 30%, var(--gold-deep) 70%, var(--gold-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4));
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)) brightness(1); }
+  50% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.7)) brightness(1.15); }
+}
+
+.hero-subtitle {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.hero-lede {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto;
+  font-style: italic;
+}
+
+.hero-lede strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--crimson);
+}
+
+.section-divider {
+  width: 100%;
+  text-align: center;
+  margin: 80px 0 60px;
+}
+.section-divider svg {
+  display: inline-block;
+  width: 280px;
+  height: 36px;
+}
+
+.volumes-section {
+  margin-bottom: 100px;
+}
+
+.volumes-head {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.volumes-num {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 60px;
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 0 rgba(139, 105, 20, 0.3));
+}
+
+.volumes-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--crimson);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.volumes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 1100px) { .volumes-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.volume {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 48px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+}
+
+.volume:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--crimson) inset,
+    0 32px 64px -24px rgba(26, 15, 5, 0.4);
+}
+
+.volume-corner {
+  position: absolute;
+  width: 60px; height: 60px;
+  pointer-events: none;
+  z-index: 2;
+}
+.volume-corner.tl { top: 12px; left: 12px; }
+.volume-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+.volume-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+.volume-corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+.vol-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px dotted var(--vellum-rule);
+}
+
+.vol-spine {
+  flex: 0 0 80px;
+  width: 80px;
+  height: 110px;
+  background: linear-gradient(135deg, var(--lapis-deep) 0%, var(--lapis) 50%, var(--azurite) 100%);
+  border: 2px solid var(--gold-deep);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px var(--parchment) inset,
+    0 0 0 2px var(--gold-2) inset,
+    0 8px 24px -8px rgba(13, 31, 92, 0.6);
+}
+
+.vol-spine.crimson {
+  background: linear-gradient(135deg, var(--crimson-deep) 0%, var(--crimson) 50%, #c0392b 100%);
+  box-shadow:
+    0 0 0 1px var(--parchment) inset,
+    0 0 0 2px var(--gold-2) inset,
+    0 8px 24px -8px rgba(94, 15, 15, 0.6);
+}
+.vol-spine.gold {
+  background: linear-gradient(135deg, #5a4108 0%, #8b6914 50%, #d4a843 100%);
+  box-shadow:
+    0 0 0 1px var(--parchment) inset,
+    0 0 0 2px var(--vermillion, #c0392b) inset,
+    0 8px 24px -8px rgba(139, 105, 20, 0.7);
+}
+.vol-spine.gold .vol-spine-num, .vol-spine.gold .vol-spine-label { color: #fdf2c4; }
+
+.vol-spine-num {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 900;
+  font-size: 32px;
+  color: var(--gold-3);
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.5));
+}
+
+.vol-spine-label {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gold-3);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.vol-titles {
+  flex: 1;
+}
+
+.vol-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gold-deep);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.vol-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.vol-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.vol-toc {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  padding: 16px 0;
+}
+.vol-toc li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.vol-toc li::before {
+  content: '✦';
+  color: var(--gold-deep);
+  flex: 0 0 auto;
+  font-size: 12px;
+}
+
+.vol-cta {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dotted var(--vellum-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vol-cta-text {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--crimson);
+  text-transform: uppercase;
+}
+
+.vol-cta-arrow {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 24px;
+  color: var(--gold-deep);
+  transition: transform 0.3s ease;
+}
+
+.volume:hover .vol-cta-arrow { transform: translateX(8px); }
+
+.about {
+  max-width: 760px;
+  margin: 0 auto 80px;
+  padding: 48px 56px;
+  background:
+    linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(139, 26, 26, 0.05) 100%),
+    linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  text-align: center;
+}
+
+.about-mark {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 48px;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.about-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.about p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.about p strong {
+  color: var(--crimson);
+  font-weight: 700;
+}
+
+.colophon {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--vellum-rule);
+}
+
+.colophon-mark {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 32px;
+  color: var(--gold-deep);
+  margin-bottom: 16px;
+}
+
+.colophon-text {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 800px) {
+  .wrap { padding: 40px 20px 80px; }
+  .hero-frame { padding: 40px 20px; }
+  .volumes-grid { grid-template-columns: 1fr; }
+  .volume { padding: 36px 28px; }
+  .about { padding: 32px 24px; }
+  .vol-header { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn-corner" viewBox="0 0 90 90">
+      <g fill="none" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 4,4 L 86,4 L 86,16 L 16,16 L 16,86 L 4,86 Z" fill="#d4a843" fill-opacity="0.15" stroke="#8b6914"/>
+        <path d="M 18,18 Q 30,20 36,32 Q 38,42 32,52 Q 22,58 18,52 M 18,18 Q 26,32 18,42 M 32,28 Q 42,22 50,28 Q 58,38 50,46 Q 42,52 36,48"/>
+        <circle cx="22" cy="22" r="2" fill="#8b1a1a"/>
+        <circle cx="38" cy="36" r="1.5" fill="#1e3a8a"/>
+        <path d="M 42,12 Q 50,8 58,12 M 50,12 L 50,4 M 12,42 Q 8,50 12,58 M 12,50 L 4,50"/>
+      </g>
+    </symbol>
+    <symbol id="orn-small" viewBox="0 0 60 60">
+      <g fill="none" stroke="#8b6914" stroke-width="1" stroke-linecap="round">
+        <path d="M 8,8 Q 18,10 22,20 Q 24,28 18,34 M 8,8 Q 14,18 8,26 M 22,16 Q 30,12 36,18"/>
+        <circle cx="12" cy="12" r="1.5" fill="#8b1a1a"/>
+        <circle cx="24" cy="24" r="1" fill="#1e3a8a"/>
+      </g>
+    </symbol>
+    <symbol id="divider" viewBox="0 0 280 36">
+      <g fill="none" stroke="#8b6914" stroke-width="1.2" stroke-linecap="round">
+        <path d="M 4,18 L 30,18 M 30,18 L 30,10 L 38,10 L 38,26 L 22,26 L 22,14 L 50,14 L 50,22 L 60,22"/>
+        <path d="M 220,22 L 230,22 L 230,14 L 258,14 L 258,26 L 242,26 L 242,10 L 250,10 L 250,18 L 276,18"/>
+        <circle cx="140" cy="18" r="12" stroke="#8b1a1a" stroke-width="1.2" fill="#fdf2c4"/>
+        <circle cx="140" cy="18" r="6" fill="#8b6914"/>
+        <circle cx="140" cy="18" r="2" fill="#fdf2c4"/>
+        <g stroke="#8b6914">
+          <line x1="140" y1="2" x2="140" y2="8"/><line x1="140" y1="28" x2="140" y2="34"/>
+          <line x1="124" y1="18" x2="118" y2="18"/><line x1="156" y1="18" x2="162" y2="18"/>
+          <line x1="129" y1="7" x2="125" y2="3"/><line x1="151" y1="7" x2="155" y2="3"/>
+          <line x1="129" y1="29" x2="125" y2="33"/><line x1="151" y1="29" x2="155" y2="33"/>
+        </g>
+        <line x1="60" y1="18" x2="120" y2="18" stroke-dasharray="2,3"/>
+        <line x1="160" y1="18" x2="220" y2="18" stroke-dasharray="2,3"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="hero-frame">
+      <svg class="ornament-corner tl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner tr"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
+
+      <div class="eyebrow-latin">Bibliotheca Cloudflarensis · Trilogia Completa</div>
+      <div class="hero-rule"></div>
+      <h1>Codex<br><span class="gilt">Cloudflarensis</span></h1>
+      <div class="hero-subtitle">Manuscriptum Illuminatum · Tres Volumina</div>
+      <p class="hero-lede">
+        Trilogía iluminada sobre el stack Cloudflare: <strong>las primitivas</strong>, <strong>la arquitectura</strong>, <strong>la operación</strong>. Tractado en estilo griego-renacentista, escrito como manuscrito digital — para arquitectos que valoran el detalle y la profundidad.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <section class="volumes-section">
+    <div class="volumes-head">
+      <div class="volumes-num">∴</div>
+      <div class="volumes-latin">— Bibliotheca —</div>
+      <h2>Los Volúmenes</h2>
+    </div>
+
+    <div class="volumes-grid">
+
+      <a href="volumen-i.html" class="volume">
+        <svg class="volume-corner tl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner tr"><use href="#orn-small"/></svg>
+        <svg class="volume-corner bl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner br"><use href="#orn-small"/></svg>
+
+        <div class="vol-header">
+          <div class="vol-spine">
+            <div class="vol-spine-num">I</div>
+            <div class="vol-spine-label">Volumen</div>
+          </div>
+          <div class="vol-titles">
+            <div class="vol-latin">— De Primitivis —</div>
+            <div class="vol-title">Las Primitivas</div>
+          </div>
+        </div>
+
+        <div class="vol-body">
+          Veinticuatro primitivas Cloudflarenses, cada una con su esencia técnica, analogía precisa que aísla su propiedad única, y mapa cosmográfico de relaciones.
+        </div>
+
+        <ul class="vol-toc">
+          <li>Pars Prima — Las Seis Fundamentales</li>
+          <li>Pars Secunda — Tabula de Propiedades</li>
+          <li>Pars Tertia — Las Tres Columnas</li>
+          <li>Pars Quarta — Primitivas Extendidas</li>
+          <li>Pars Quinta — Graphum Cosmographicum</li>
+        </ul>
+
+        <div class="vol-cta">
+          <span class="vol-cta-text">Aperire Volumen</span>
+          <span class="vol-cta-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="volumen-ii.html" class="volume">
+        <svg class="volume-corner tl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner tr"><use href="#orn-small"/></svg>
+        <svg class="volume-corner bl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner br"><use href="#orn-small"/></svg>
+
+        <div class="vol-header">
+          <div class="vol-spine crimson">
+            <div class="vol-spine-num">II</div>
+            <div class="vol-spine-label">Volumen</div>
+          </div>
+          <div class="vol-titles">
+            <div class="vol-latin">— De Architectura —</div>
+            <div class="vol-title">La Arquitectura</div>
+          </div>
+        </div>
+
+        <div class="vol-body">
+          Patrones de composición, teoremas distribuidos, sistemas de referencia canonical, árbol de decisión arquitectónico, y los siete pecados capitales del arquitecto Cloudflarense.
+        </div>
+
+        <ul class="vol-toc">
+          <li>Pars Prima — Patrones de Composición</li>
+          <li>Pars Secunda — Teoremas Distribuidos</li>
+          <li>Pars Tertia — Sistemas de Referencia</li>
+          <li>Pars Quarta — Arbor Decisionis</li>
+          <li>Pars Quinta — Septem Peccata Capitalia</li>
+        </ul>
+
+        <div class="vol-cta">
+          <span class="vol-cta-text">Aperire Volumen</span>
+          <span class="vol-cta-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="volumen-iii.html" class="volume">
+        <svg class="volume-corner tl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner tr"><use href="#orn-small"/></svg>
+        <svg class="volume-corner bl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner br"><use href="#orn-small"/></svg>
+
+        <div class="vol-header">
+          <div class="vol-spine gold">
+            <div class="vol-spine-num">III</div>
+            <div class="vol-spine-label">Volumen</div>
+          </div>
+          <div class="vol-titles">
+            <div class="vol-latin">— De Operationibus —</div>
+            <div class="vol-title">La Operación</div>
+          </div>
+        </div>
+
+        <div class="vol-body">
+          Failure modes detallados por primitiva, cost models con cálculos reales, observability stack, migration playbooks, y los límites de performance del stack Cloudflare.
+        </div>
+
+        <ul class="vol-toc">
+          <li>Pars Prima — Modi Defectionis</li>
+          <li>Pars Secunda — Aestimatio Pretii</li>
+          <li>Pars Tertia — Observatio</li>
+          <li>Pars Quarta — Migrationes</li>
+          <li>Pars Quinta — Limites Performantiae</li>
+        </ul>
+
+        <div class="vol-cta">
+          <span class="vol-cta-text">Aperire Volumen</span>
+          <span class="vol-cta-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <section class="about">
+    <div class="about-mark">❦</div>
+    <div class="about-title">De Hoc Codice</div>
+    <p>
+      Esta bibliotheca digital fue compuesta como ejercicio de estudio profundo del stack Cloudflare. Cada primitiva, patrón y teorema se presenta con su <strong>nombre latino</strong>, su esencia técnica, y su analogía precisa — porque entender no es memorizar, sino reconocer la propiedad esencial de cada cosa.
+    </p>
+    <p>
+      Construido con <strong>tipografía renacentista</strong> (Cinzel Decorative, Cormorant Garamond, EB Garamond, UnifrakturMaguntia), pigmentos medievales auténticos (lapislázuli, vermillón, verdigris, oro envejecido), ornamentos SVG hand-coded, y disciplinada estructura escolástica.
+    </p>
+    <p style="margin-bottom:0">
+      Servido sobre Cloudflare Pages — el codex de Cloudflare hospedado por Cloudflare mismo. Recursio dignified.
+    </p>
+  </section>
+
+  <div class="colophon">
+    <div class="colophon-mark">⁘ ❦ ⁘</div>
+    <div class="colophon-text">Bibliotheca composita · Anno Domini MMXXVI · Ad maiorem architecturae gloriam</div>
+  </div>
+
+</div>
+
+</body>
+</html>

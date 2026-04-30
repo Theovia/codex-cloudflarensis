@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Primitivis Cloudflarensibus · Codex Illuminatus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+.nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(241, 228, 196, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #8b6914; padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+.nav-bar a { color: #3d2a18; text-decoration: none; padding: 4px 12px; border-bottom: 1px solid transparent; transition: all 0.3s; }
+.nav-bar a:hover { color: #8b1a1a; border-bottom-color: #8b6914; }
+.nav-bar .nav-current { color: #8b1a1a; font-weight: 700; }
+.nav-bar .nav-home { font-family: 'EB Garamond', serif; font-style: italic; letter-spacing: 0.2em; }
+.codex { padding-top: 100px !important; }
+@media (max-width: 700px) { .nav-bar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; font-size: 9px; } }
+</style>
+
+<style>
+:root {
+  --parchment: #f1e4c4;
+  --parchment-light: #f9efd1;
+  --parchment-dark: #e6d4a8;
+  --parchment-shadow: #c9b685;
+
+  --ink: #1a0f05;
+  --ink-soft: #3d2a18;
+  --ink-faded: #6b5236;
+
+  --gold-1: #b8860b;
+  --gold-2: #d4a843;
+  --gold-3: #f5d574;
+  --gold-4: #fdf2c4;
+  --gold-deep: #8b6914;
+
+  --crimson: #8b1a1a;
+  --crimson-deep: #5e0f0f;
+  --vermillion: #c0392b;
+
+  --lapis: #1e3a8a;
+  --lapis-deep: #0d1f5c;
+  --azurite: #2a5298;
+
+  --verdigris: #4a7c59;
+  --malachite: #2d5a3d;
+
+  --violet: #6b2d99;
+  --violet-deep: #4a1d6e;
+  --amethyst: #8e44c5;
+
+  --sepia: #6b4423;
+  --umber: #4a2f17;
+
+  --teal: #1d6b6e;
+  --indigo: #2c2c6e;
+  --rose: #9c3a5b;
+  --slate: #475569;
+
+  --vellum-rule: rgba(26, 15, 5, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 105, 20, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.28   0 0 0 0 0.1   0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: cover, cover, 400px 400px;
+  background-attachment: fixed;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 50%, rgba(26, 15, 5, 0.18) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.codex {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 48px 120px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============ HERO ============ */
+.hero { text-align: center; padding: 60px 0 100px; position: relative; }
+.hero-frame {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  position: relative;
+  padding: 80px 64px;
+}
+.ornament-corner {
+  position: absolute;
+  width: 90px; height: 90px;
+  pointer-events: none;
+}
+.ornament-corner.tl { top: 0; left: 0; }
+.ornament-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner.br { bottom: 0; right: 0; transform: scale(-1); }
+
+.eyebrow-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-rule {
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  margin: 0 auto 32px;
+}
+h1.codex-title {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 76px);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  position: relative;
+  text-align: center;
+}
+h1.codex-title .gilt {
+  display: inline-block;
+  font-size: 0.72em;
+  letter-spacing: 0.01em;
+  background: linear-gradient(180deg, var(--gold-3) 0%, var(--gold-2) 30%, var(--gold-deep) 70%, var(--gold-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4));
+}
+.hero-subtitle {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.hero-lede {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto;
+  font-style: italic;
+}
+.hero-lede strong { font-style: normal; font-weight: 600; color: var(--crimson); }
+
+.toc {
+  margin-top: 56px;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.toc a {
+  color: var(--ink-faded);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.toc a:hover { color: var(--crimson); border-bottom-color: var(--gold-deep); }
+
+/* ============ DIVIDERS ============ */
+.section-divider {
+  width: 100%;
+  text-align: center;
+  margin: 80px 0 60px;
+  position: relative;
+}
+.section-divider svg { display: inline-block; width: 280px; height: 36px; }
+
+/* ============ SECTIONS ============ */
+.section { margin-bottom: 100px; }
+.section-head {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+.section-num {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 60px;
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 0 rgba(139, 105, 20, 0.3));
+}
+h2.section-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--crimson);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  color: var(--ink-soft);
+  max-width: 660px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ============ PRIMITIVES (CORE 6) ============ */
+.primitives { display: grid; gap: 32px; }
+.primitive {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  border-radius: 4px;
+  padding: 56px 64px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 56px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+}
+.primitive-corner {
+  position: absolute;
+  width: 60px; height: 60px;
+  pointer-events: none;
+  z-index: 2;
+}
+.primitive-corner.tl { top: 12px; left: 12px; }
+.primitive-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+.primitive-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+.primitive-corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+.prim-illumination {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.drop-cap-frame {
+  width: 168px; height: 168px;
+  position: relative;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--lapis-deep) 0%, var(--lapis) 50%, var(--azurite) 100%);
+  border: 3px solid var(--gold-deep);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 2px var(--parchment) inset,
+    0 0 0 3px var(--gold-2) inset,
+    0 8px 24px -8px rgba(13, 31, 92, 0.6);
+  overflow: hidden;
+}
+.drop-cap-frame.crimson { background: linear-gradient(135deg, var(--crimson-deep) 0%, var(--crimson) 50%, var(--vermillion) 100%); box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset, 0 8px 24px -8px rgba(94, 15, 15, 0.6); }
+.drop-cap-frame.verdigris { background: linear-gradient(135deg, var(--malachite) 0%, var(--verdigris) 50%, #6b9c7a 100%); box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset, 0 8px 24px -8px rgba(45, 90, 61, 0.6); }
+.drop-cap-frame.gold-bg { background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-2) 50%, var(--gold-3) 100%); box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--crimson) inset, 0 8px 24px -8px rgba(139, 105, 20, 0.7); }
+.drop-cap-frame.violet { background: linear-gradient(135deg, var(--violet-deep) 0%, var(--violet) 50%, var(--amethyst) 100%); box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset, 0 8px 24px -8px rgba(74, 29, 110, 0.6); }
+.drop-cap-frame.dark { background: linear-gradient(135deg, #1a0f05 0%, #3d2a18 50%, #5d4128 100%); box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset, 0 8px 24px -8px rgba(26, 15, 5, 0.7); }
+
+.drop-cap {
+  font-family: 'UnifrakturMaguntia', 'Cinzel Decorative', serif;
+  font-size: 110px;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(180deg, var(--gold-4), var(--gold-2) 60%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.5));
+  position: relative;
+  z-index: 2;
+}
+.drop-cap-flourish {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+.prim-name-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-deep);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.prim-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.prim-tag {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+  letter-spacing: 0.05em;
+}
+.prim-content { display: flex; flex-direction: column; gap: 20px; }
+.prim-block { position: relative; }
+.block-label {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 12px;
+}
+.block-label::before, .block-label::after {
+  content: ''; height: 1px; flex: 0 0 24px; background: var(--crimson); opacity: 0.3;
+}
+.block-label::before { flex: 0 0 12px; }
+.block-label::after { flex: 1 1 auto; }
+.essence {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 21px;
+  color: var(--ink);
+  font-style: italic;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.prim-block p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.analogy-card {
+  background: rgba(255, 248, 220, 0.4);
+  border-left: 3px solid var(--gold-deep);
+  padding: 16px 22px;
+  position: relative;
+  margin-top: 4px;
+}
+.analogy-card::before {
+  content: '❦';
+  position: absolute;
+  left: 8px; top: -2px;
+  color: var(--gold-deep);
+  font-size: 18px;
+  background: var(--parchment-light);
+  padding: 0 4px;
+}
+.analogy-card .ana-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.analogy-card .ana-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  color: var(--ink-soft);
+  font-style: italic;
+  line-height: 1.55;
+}
+.analogy-card .ana-body strong { color: var(--ink); font-style: normal; font-weight: 600; }
+.uniqueness {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--gold-deep);
+  padding-top: 12px;
+  border-top: 1px dotted var(--vellum-rule);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.uniqueness::before { content: '✦'; color: var(--gold-deep); font-style: normal; flex: 0 0 auto; }
+
+/* ============ EXTENDED PRIMITIVES (COMPACT) ============ */
+.extended-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.ext-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 32px 28px 28px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 3px var(--parchment) inset,
+    0 0 0 4px var(--gold-deep) inset,
+    0 16px 32px -16px rgba(26, 15, 5, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+.ext-cap {
+  width: 84px; height: 84px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--gold-deep);
+  box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset;
+  position: relative;
+  overflow: hidden;
+}
+.ext-cap .ext-letter {
+  font-family: 'UnifrakturMaguntia', 'Cinzel Decorative', serif;
+  font-size: 56px;
+  background: linear-gradient(180deg, var(--gold-4), var(--gold-2) 60%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+  line-height: 1;
+}
+.ext-cap.sepia { background: linear-gradient(135deg, var(--umber), var(--sepia)); }
+.ext-cap.crimson { background: linear-gradient(135deg, var(--crimson-deep), var(--vermillion)); }
+.ext-cap.teal { background: linear-gradient(135deg, #0f4548, var(--teal)); }
+.ext-cap.violet { background: linear-gradient(135deg, var(--violet-deep), var(--amethyst)); }
+.ext-cap.lapis { background: linear-gradient(135deg, var(--lapis-deep), var(--azurite)); }
+.ext-cap.indigo { background: linear-gradient(135deg, #15154a, var(--indigo)); }
+.ext-cap.amber { background: linear-gradient(135deg, var(--gold-deep), var(--gold-2)); }
+.ext-cap.dark { background: linear-gradient(135deg, #1a0f05, #3d2a18); }
+.ext-cap.verdigris { background: linear-gradient(135deg, var(--malachite), var(--verdigris)); }
+.ext-cap.parchment { background: linear-gradient(135deg, var(--parchment-shadow), var(--parchment-dark)); }
+.ext-cap.rose { background: linear-gradient(135deg, #5e1d35, var(--rose)); }
+.ext-cap.slate { background: linear-gradient(135deg, #2d3748, var(--slate)); }
+
+.ext-name-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--gold-deep);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.ext-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.ext-essence {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.4;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px dotted var(--vellum-rule);
+}
+.ext-analogy {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  text-align: center;
+  flex: 1;
+}
+.ext-analogy strong { color: var(--crimson); font-weight: 700; }
+
+/* ============ TABULA ============ */
+.tabula-wrap {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  overflow-x: auto;
+  position: relative;
+}
+table.tabula {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Cormorant Garamond', serif;
+}
+table.tabula th, table.tabula td {
+  padding: 16px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--vellum-rule);
+}
+table.tabula th {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--gold-deep);
+}
+table.tabula tr:last-child td { border-bottom: none; }
+table.tabula td.name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+table.tabula td.name span {
+  display: inline-block;
+  width: 10px; height: 10px;
+  margin-right: 12px;
+  vertical-align: middle;
+  border: 1px solid var(--gold-deep);
+}
+.yes { color: var(--malachite); font-weight: 700; font-family: 'Cinzel', serif; font-size: 13px; }
+.no  { color: var(--crimson); font-weight: 700; font-family: 'Cinzel', serif; font-size: 13px; }
+.partial { color: var(--ink-faded); font-style: italic; }
+table.tabula td { font-size: 16px; color: var(--ink-soft); }
+
+/* ============ COLUMNAE ============ */
+.columnae {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.columna {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 36px 28px 32px;
+  position: relative;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 3px var(--parchment) inset,
+    0 0 0 4px var(--gold-deep) inset,
+    0 16px 32px -16px rgba(26, 15, 5, 0.25);
+}
+.columna-capital {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--vellum-rule);
+}
+.columna-num {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+}
+.columna-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.columna-sub {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+}
+.columna-list { list-style: none; }
+.columna-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px dotted var(--vellum-rule);
+  font-family: 'Cormorant Garamond', serif;
+}
+.columna-list li:last-child { border: none; }
+.columna-list .label { font-weight: 600; font-size: 17px; color: var(--ink); }
+.columna-list .label span.bullet {
+  display: inline-block;
+  width: 8px; height: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: var(--gold-deep);
+  border-radius: 50%;
+}
+.columna-list .val {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+  letter-spacing: 0.03em;
+}
+
+/* ============ GRAPH ============ */
+.graphum {
+  background:
+    radial-gradient(ellipse at center, var(--parchment-light) 0%, var(--parchment) 60%, var(--parchment-dark) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 24px;
+  position: relative;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  overflow: hidden;
+  aspect-ratio: 16 / 12;
+  min-height: 700px;
+}
+
+.graph-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.graph-edge {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 1.2;
+  opacity: 0.35;
+  stroke-dasharray: 4 4;
+  transition: opacity 0.3s, stroke 0.3s, stroke-width 0.3s;
+}
+.graph-edge.flow {
+  animation: edgeFlow 3s linear infinite;
+}
+@keyframes edgeFlow {
+  to { stroke-dashoffset: -16; }
+}
+.graph-edge.highlighted {
+  stroke: var(--crimson);
+  opacity: 0.9;
+  stroke-width: 2;
+}
+
+.graph-node {
+  cursor: pointer;
+  transition: transform 0.3s;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.graph-node:hover { transform: scale(1.15); }
+.graph-node circle.bg {
+  fill: var(--parchment-light);
+  stroke: var(--gold-deep);
+  stroke-width: 2;
+  filter: drop-shadow(0 2px 4px rgba(26, 15, 5, 0.3));
+}
+.graph-node.center circle.bg {
+  fill: url(#centerGrad);
+  stroke: var(--gold-deep);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 12px rgba(212, 168, 67, 0.6));
+}
+.graph-node.compute circle.bg { fill: #f4d8c9; }
+.graph-node.state circle.bg { fill: #d8e2f4; }
+.graph-node.ai circle.bg { fill: #e8d8f4; }
+.graph-node.async circle.bg { fill: #d8f4e0; }
+.graph-node.media circle.bg { fill: #f4e0d8; }
+.graph-node.gateway circle.bg { fill: #f4ead0; }
+
+.graph-node text.label {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  fill: var(--ink);
+  text-transform: uppercase;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.graph-node text.latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 9px;
+  fill: var(--gold-deep);
+  letter-spacing: 0.1em;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.graph-node.center text.label { font-size: 14px; fill: var(--gold-deep); }
+.graph-node.center text.latin { font-size: 10px; fill: var(--crimson); }
+
+.graph-node.dimmed { opacity: 0.18; }
+.graph-edge.dimmed { opacity: 0.05; }
+
+.legend {
+  position: absolute;
+  top: 24px; left: 24px;
+  background: rgba(249, 239, 209, 0.92);
+  border: 1px solid var(--gold-deep);
+  padding: 16px 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(26, 15, 5, 0.15);
+}
+.legend-title {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--crimson);
+  letter-spacing: 0.18em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--vellum-rule);
+  padding-bottom: 6px;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.legend-swatch {
+  width: 12px; height: 12px;
+  border: 1px solid var(--gold-deep);
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(249, 239, 209, 0.96);
+  border: 1px solid var(--gold-deep);
+  padding: 12px 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink);
+  max-width: 240px;
+  box-shadow: 0 4px 12px rgba(26, 15, 5, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+.tooltip.visible { opacity: 1; }
+.tooltip .tt-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  margin-bottom: 4px;
+}
+.tooltip .tt-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--gold-deep);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.tooltip .tt-body { font-size: 14px; line-height: 1.4; color: var(--ink-soft); }
+
+/* ============ EPILOGUE ============ */
+.epilogue {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(139, 26, 26, 0.05) 100%),
+    linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 64px;
+  box-shadow:
+    0 0 0 1px var(--gold-deep) inset,
+    0 0 0 4px var(--parchment) inset,
+    0 0 0 5px var(--gold-deep) inset,
+    0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  text-align: center;
+}
+.epilogue-mark {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 72px;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.epilogue-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(24px, 3.4vw, 36px);
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.epilogue-latin {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--crimson);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.epilogue p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 720px;
+  margin: 0 auto 18px;
+}
+.epilogue p strong { font-weight: 700; color: var(--crimson); }
+.epilogue p:first-of-type::first-letter {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 900;
+  font-size: 42px;
+  color: var(--gold-deep);
+  float: left;
+  line-height: 0.9;
+  margin-right: 8px;
+  margin-top: 4px;
+}
+
+.colophon {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--vellum-rule);
+}
+.colophon-mark {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 32px;
+  color: var(--gold-deep);
+  margin-bottom: 16px;
+}
+.colophon-text {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  .extended-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .codex { padding: 40px 20px 80px; }
+  .primitive { grid-template-columns: 1fr; padding: 40px 28px; gap: 32px; }
+  .columnae { grid-template-columns: 1fr; }
+  .extended-grid { grid-template-columns: 1fr; }
+  .hero-frame { padding: 40px 16px; }
+  .epilogue { padding: 40px 24px; }
+  .graphum { aspect-ratio: 1 / 1; min-height: 500px; }
+  .legend { font-size: 9px; padding: 10px 12px; top: 12px; left: 12px; }
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes shimmer {
+  0%, 100% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)) brightness(1); }
+  50% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.7)) brightness(1.15); }
+}
+h1.codex-title .gilt { animation: shimmer 6s ease-in-out infinite; }
+
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+@keyframes centerPulse {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(212, 168, 67, 0.6)); }
+  50% { filter: drop-shadow(0 0 24px rgba(212, 168, 67, 0.9)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">❦ Bibliotheca</a>
+  <div style="display:flex;gap:8px">
+    <a href="volumen-i.html" class="nav-current">Vol I · Primitivae</a>
+    <a href="volumen-ii.html">Vol II · Architectura</a>
+    <a href="volumen-iii.html">Vol III · Operationes</a>
+  </div>
+</nav>
+
+<!-- SVG SYMBOLS -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn-corner" viewBox="0 0 90 90">
+      <g fill="none" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 4,4 L 86,4 L 86,16 L 16,16 L 16,86 L 4,86 Z" fill="#d4a843" fill-opacity="0.15" stroke="#8b6914"/>
+        <path d="M 18,18 Q 30,20 36,32 Q 38,42 32,52 Q 22,58 18,52 M 18,18 Q 26,32 18,42 M 32,28 Q 42,22 50,28 Q 58,38 50,46 Q 42,52 36,48"/>
+        <circle cx="22" cy="22" r="2" fill="#8b1a1a"/>
+        <circle cx="38" cy="36" r="1.5" fill="#1e3a8a"/>
+        <path d="M 42,12 Q 50,8 58,12 M 50,12 L 50,4 M 12,42 Q 8,50 12,58 M 12,50 L 4,50"/>
+      </g>
+    </symbol>
+
+    <symbol id="divider" viewBox="0 0 280 36">
+      <g fill="none" stroke="#8b6914" stroke-width="1.2" stroke-linecap="round">
+        <path d="M 4,18 L 30,18 M 30,18 L 30,10 L 38,10 L 38,26 L 22,26 L 22,14 L 50,14 L 50,22 L 60,22"/>
+        <path d="M 220,22 L 230,22 L 230,14 L 258,14 L 258,26 L 242,26 L 242,10 L 250,10 L 250,18 L 276,18"/>
+        <circle cx="140" cy="18" r="12" stroke="#8b1a1a" stroke-width="1.2" fill="#fdf2c4"/>
+        <circle cx="140" cy="18" r="6" fill="#8b6914"/>
+        <circle cx="140" cy="18" r="2" fill="#fdf2c4"/>
+        <g stroke="#8b6914">
+          <line x1="140" y1="2" x2="140" y2="8"/>
+          <line x1="140" y1="28" x2="140" y2="34"/>
+          <line x1="124" y1="18" x2="118" y2="18"/>
+          <line x1="156" y1="18" x2="162" y2="18"/>
+          <line x1="129" y1="7" x2="125" y2="3"/>
+          <line x1="151" y1="7" x2="155" y2="3"/>
+          <line x1="129" y1="29" x2="125" y2="33"/>
+          <line x1="151" y1="29" x2="155" y2="33"/>
+        </g>
+        <line x1="60" y1="18" x2="120" y2="18" stroke-dasharray="2,3"/>
+        <line x1="160" y1="18" x2="220" y2="18" stroke-dasharray="2,3"/>
+      </g>
+    </symbol>
+
+    <symbol id="orn-small" viewBox="0 0 60 60">
+      <g fill="none" stroke="#8b6914" stroke-width="1" stroke-linecap="round">
+        <path d="M 8,8 Q 18,10 22,20 Q 24,28 18,34 M 8,8 Q 14,18 8,26 M 22,16 Q 30,12 36,18"/>
+        <circle cx="12" cy="12" r="1.5" fill="#8b1a1a"/>
+        <circle cx="24" cy="24" r="1" fill="#1e3a8a"/>
+      </g>
+    </symbol>
+
+    <symbol id="dc-flourish" viewBox="0 0 168 168">
+      <g fill="none" stroke="rgba(255, 248, 220, 0.6)" stroke-width="0.8">
+        <circle cx="84" cy="84" r="78"/>
+        <circle cx="84" cy="84" r="64"/>
+        <path d="M 12,12 Q 30,30 12,48 M 156,12 Q 138,30 156,48 M 12,156 Q 30,138 12,120 M 156,156 Q 138,138 156,120"/>
+        <path d="M 84,6 L 84,18 M 84,150 L 84,162 M 6,84 L 18,84 M 150,84 L 162,84"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="codex">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-frame">
+      <svg class="ornament-corner tl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner tr"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
+
+      <div class="eyebrow-latin">Codex Cloudflarensis · Folio I</div>
+      <div class="hero-rule"></div>
+      <h1 class="codex-title">De Primitivis<br><span class="gilt">Cloudflarensibus</span></h1>
+      <div class="hero-subtitle">Tractatus Illuminatus</div>
+      <p class="hero-lede">
+        Veinte primitivas, veinte propiedades singulares. Cada una resuelve <strong>un solo tradeoff</strong> de compute, state y consistency. La maestría no está en saberlas todas — sino en distinguir cuál se aplica al problema que tienes enfrente.
+      </p>
+      <nav class="toc">
+        <a href="#pars-i">I · Sex Fundamentales</a>
+        <a href="#pars-ii">II · Tabula</a>
+        <a href="#pars-iii">III · Tres Columnae</a>
+        <a href="#pars-iv">IV · Primitivae Extensae</a>
+        <a href="#pars-v">V · Graphum Relationum</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ SECTION I ============ -->
+  <section class="section" id="pars-i">
+    <div class="section-head">
+      <div class="section-num">I</div>
+      <div class="section-latin">Pars Prima</div>
+      <h2 class="section-title">Las Seis Fundamentales</h2>
+      <p class="section-sub">El núcleo del stack. Cada una con su esencia, analogía precisa que aísla su propiedad única, y qué hueco deja si la quitas.</p>
+    </div>
+
+    <div class="primitives">
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame crimson"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">W</span></div>
+          <div class="prim-name-latin">— Operarius —</div>
+          <div class="prim-name">Worker</div>
+          <div class="prim-tag">Compute · Effímero</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">V8 isolate spawn-on-demand.</div>
+            <p>Existe sólo durante un request. Cero memoria entre requests. Cold start cinco milisegundos. Infinitos paralelos sin configuración.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Chispa de Pedernal</div>
+            <div class="ana-body"><strong>Golpeas, existe, se apaga.</strong> Diez mil chispas por segundo trivial — pedernal infinito. Ninguna chispa recuerda otra. Cero costo idle: no hay chispa hasta que golpeas el pedernal.</div>
+          </div>
+          <div class="uniqueness">Sin Worker, no hay compute en el edge.</div>
+        </div>
+      </article>
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">K</span></div>
+          <div class="prim-name-latin">— Bibliothecarius —</div>
+          <div class="prim-name">KV</div>
+          <div class="prim-tag">State · Eventual · Read-Heavy</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">Replicación global, consistencia eventual.</div>
+            <p>Reads desde edge en diez milisegundos. Writes propagan en sesenta segundos al mundo. Cap de un write por segundo por key. Reads sin límite.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Periódico Distribuido</div>
+            <div class="ana-body"><strong>Cada kiosco del mundo tiene copia.</strong> Lectura local instantánea. Editar exige reimprimir y repartir — minutos. Imposible dos ediciones por segundo del mismo periódico.</div>
+          </div>
+          <div class="uniqueness">Sin KV, no hay cache global de lectura masiva.</div>
+        </div>
+      </article>
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame violet"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">D</span></div>
+          <div class="prim-name-latin">— Tabularium —</div>
+          <div class="prim-name">D1</div>
+          <div class="prim-tag">State · Strong · Relational</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">SQLite serverless con primary único.</div>
+            <p>SQL relacional, joins, transactions. Aproximadamente un gigabyte. Mil writes por segundo en primary. Read replicas distribuidas globalmente.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Registro Civil Central</div>
+            <div class="ana-body"><strong>Una oficina central guarda las actas.</strong> Queries complejas posibles — todos los nacidos en marzo y casados antes de junio. Capacidad de turnos por día limitada. Si toda la ciudad hace trámite el mismo día, hay fila.</div>
+          </div>
+          <div class="uniqueness">Sin D1, no hay queries SQL relacionales serverless.</div>
+        </div>
+      </article>
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame gold-bg"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">O</span></div>
+          <div class="prim-name-latin">— Custos Singularis —</div>
+          <div class="prim-name">Durable Object</div>
+          <div class="prim-tag">State · Strong · Single-Writer per ID</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">Single-writer global garantizado por ID.</div>
+            <p>Stateful in-memory más SQLite local. Strong consistency. Hiberna y despierta. Soporta alarms, WebSockets, RPC entre workers.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Tablero de Una Partida</div>
+            <div class="ana-body"><strong>Partida #abc123 tiene un tablero único en el mundo.</strong> Sólo movimientos de esa partida tocan ese tablero. Movimientos serializados — físicamente imposible dos simultáneos. Otra partida es otro tablero, completamente independiente.</div>
+          </div>
+          <div class="uniqueness">Sin DO, imposible coordinar single-writer-per-entity en edge global.</div>
+        </div>
+      </article>
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame verdigris"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">Q</span></div>
+          <div class="prim-name-latin">— Cursus Publicus —</div>
+          <div class="prim-name">Queue</div>
+          <div class="prim-tag">Async · Buffered · At-Least-Once</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">Buffer asíncrono producer-consumer.</div>
+            <p>Retry con backoff exponencial. Batching. Dead letter queue para mensajes irrecuperables. At-least-once delivery — la idempotencia es responsabilidad tuya.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Buzón de Correo</div>
+            <div class="ana-body"><strong>Echas la carta y sigues caminando.</strong> El cartero la recoge cuando puede. Si falla, reintento mañana. Cartas perdidas tras siete intentos van al buzón muerto.</div>
+          </div>
+          <div class="uniqueness">Sin Queue, no hay decoupling async durable simple.</div>
+        </div>
+      </article>
+
+      <article class="primitive">
+        <svg class="primitive-corner tl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner tr"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner bl"><use href="#orn-small"/></svg>
+        <svg class="primitive-corner br"><use href="#orn-small"/></svg>
+        <div class="prim-illumination">
+          <div class="drop-cap-frame dark"><svg class="drop-cap-flourish"><use href="#dc-flourish"/></svg><span class="drop-cap">F</span></div>
+          <div class="prim-name-latin">— Ordo Operum —</div>
+          <div class="prim-name">Workflow</div>
+          <div class="prim-tag">Orquestación · Replayable</div>
+        </div>
+        <div class="prim-content">
+          <div class="prim-block">
+            <div class="block-label">Esencia Técnica</div>
+            <div class="essence">Ejecución durable replayable multi-step.</div>
+            <p>Cada step persiste su resultado. Sobrevive crashes del runtime. Reanuda desde el último step exitoso. Soporta sleep de horas o días.</p>
+          </div>
+          <div class="analogy-card">
+            <div class="ana-title">Analogía · Instructivo IKEA con Checkmarks</div>
+            <div class="ana-body"><strong>Step 1 ✓, Step 2 ✓, Step 3 — crash — reanudas en Step 3.</strong> Estado persistido entre steps: tornillos ya puestos, mesa medio armada. Puedes pausar días, retomas igual.</div>
+          </div>
+          <div class="uniqueness">Sin Workflow, multi-step async durable es build-it-yourself.</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ SECTION II — TABULA ============ -->
+  <section class="section" id="pars-ii">
+    <div class="section-head">
+      <div class="section-num">II</div>
+      <div class="section-latin">Pars Secunda</div>
+      <h2 class="section-title">Tabula de Propiedades</h2>
+      <p class="section-sub">Cada primitiva ocupa un punto único en el espacio de tradeoffs. Si necesitas una combinación específica, sólo una la tiene.</p>
+    </div>
+
+    <div class="tabula-wrap">
+      <table class="tabula">
+        <thead>
+          <tr><th>Primitiva</th><th>Stateful</th><th>Consistencia</th><th>Throughput</th><th>Scope</th><th>Cuándo Sólo Ésta Sirve</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name"><span style="background:var(--crimson)"></span>Worker</td><td class="no">Non</td><td class="partial">n/a</td><td class="yes">∞ horizontal</td><td>Globalis</td><td>Compute en edge</td></tr>
+          <tr><td class="name"><span style="background:var(--lapis)"></span>KV</td><td class="yes">Sic</td><td>Eventual ~60s</td><td>∞ reads · 1/s/key</td><td>Globalis</td><td>Cache global lectura masiva</td></tr>
+          <tr><td class="name"><span style="background:var(--violet)"></span>D1</td><td class="yes">Sic</td><td>Strong</td><td>~1K writes/s</td><td>Regional + replicae</td><td>Queries SQL relacional</td></tr>
+          <tr><td class="name"><span style="background:var(--gold-2)"></span>Durable Object</td><td class="yes">Sic</td><td>Strong</td><td>1 writer/ID · ∞ IDs</td><td>Per-ID globalis</td><td>Coordinación per-entidad</td></tr>
+          <tr><td class="name"><span style="background:var(--verdigris)"></span>Queue</td><td class="partial">Buffer</td><td>At-least-once</td><td>Alto sostenido</td><td>Globalis</td><td>Async decouple</td></tr>
+          <tr><td class="name"><span style="background:#3d2a18"></span>Workflow</td><td class="partial">Run state</td><td>Strong replay</td><td>Long-running</td><td>Globalis</td><td>Multi-step durable</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ SECTION III — COLUMNAE ============ -->
+  <section class="section" id="pars-iii">
+    <div class="section-head">
+      <div class="section-num">III</div>
+      <div class="section-latin">Pars Tertia</div>
+      <h2 class="section-title">Las Tres Columnas</h2>
+      <p class="section-sub">Compute · State · Consistency. Los PaaS tradicionales mezclan estos ejes en "servidores". Cloudflare los separa deliberadamente.</p>
+    </div>
+
+    <div class="columnae">
+      <div class="columna">
+        <div class="columna-capital">
+          <div class="columna-num">I</div>
+          <div class="columna-title">Compute</div>
+          <div class="columna-sub">Quis exsequitur logicam?</div>
+        </div>
+        <ul class="columna-list">
+          <li><span class="label"><span class="bullet" style="background:var(--crimson)"></span>Worker</span><span class="val">stateless · ephemeral</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--gold-2)"></span>Durable Object</span><span class="val">stateful · per-ID</span></li>
+          <li><span class="label"><span class="bullet" style="background:#3d2a18"></span>Workflow</span><span class="val">long-running · durable</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--slate)"></span>Containers</span><span class="val">Docker · pesado</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--malachite)"></span>Sandbox</span><span class="val">isolated execution</span></li>
+        </ul>
+      </div>
+      <div class="columna">
+        <div class="columna-capital">
+          <div class="columna-num">II</div>
+          <div class="columna-title">State</div>
+          <div class="columna-sub">Ubi data habitant?</div>
+        </div>
+        <ul class="columna-list">
+          <li><span class="label"><span class="bullet" style="background:var(--lapis)"></span>KV</span><span class="val">key-value globalis</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--violet)"></span>D1</span><span class="val">SQL regionalis</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--gold-2)"></span>DO Storage</span><span class="val">SQLite per-DO</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--sepia)"></span>R2</span><span class="val">obiectum · blobs</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--teal)"></span>Vectorize</span><span class="val">vectores · semantic</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--gold-deep)"></span>Cache API</span><span class="val">HTTP cache edge</span></li>
+        </ul>
+      </div>
+      <div class="columna">
+        <div class="columna-capital">
+          <div class="columna-num">III</div>
+          <div class="columna-title">Consistency</div>
+          <div class="columna-sub">Quando mutationes apparent?</div>
+        </div>
+        <ul class="columna-list">
+          <li><span class="label"><span class="bullet" style="background:var(--lapis)"></span>Eventual</span><span class="val">KV · ~60s prop</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--violet)"></span>Strong</span><span class="val">D1 · single primary</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--gold-2)"></span>Strong per-ID</span><span class="val">DO · single-writer</span></li>
+          <li><span class="label"><span class="bullet" style="background:var(--verdigris)"></span>At-least-once</span><span class="val">Queue · retry</span></li>
+          <li><span class="label"><span class="bullet" style="background:#3d2a18"></span>Replay-strong</span><span class="val">Workflow · steps</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ SECTION IV — PRIMITIVAE EXTENSAE ============ -->
+  <section class="section" id="pars-iv">
+    <div class="section-head">
+      <div class="section-num">IV</div>
+      <div class="section-latin">Pars Quarta</div>
+      <h2 class="section-title">Primitivas Extendidas</h2>
+      <p class="section-sub">Más allá del núcleo. Storage, intelligence, connectivity, media — todas con su propósito singular en el firmamento del stack.</p>
+    </div>
+
+    <div class="extended-grid">
+
+      <article class="ext-card">
+        <div class="ext-cap sepia"><span class="ext-letter">R</span></div>
+        <div class="ext-name-latin">— Thesaurus —</div>
+        <div class="ext-name">R2</div>
+        <div class="ext-essence">Object storage S3-compatible, cero costo de egress.</div>
+        <div class="ext-analogy"><strong>Bóveda del tesoro.</strong> Guardas blobs de cualquier tamaño. Sacar = gratis (a diferencia de S3). Ideal para media, backups, archivos pesados.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap crimson"><span class="ext-letter">A</span></div>
+        <div class="ext-name-latin">— Oraculum —</div>
+        <div class="ext-name">Workers AI</div>
+        <div class="ext-essence">Inferencia ML en edge sin gestionar API keys.</div>
+        <div class="ext-analogy"><strong>Oráculo de Delfos.</strong> Pregunta, recibe respuesta. Modelos hosted CF — Llama, Mistral, embeddings, vision. Pay per token.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap teal"><span class="ext-letter">V</span></div>
+        <div class="ext-name-latin">— Mensor —</div>
+        <div class="ext-name">Vectorize</div>
+        <div class="ext-essence">Vector database para semantic search y RAG.</div>
+        <div class="ext-analogy"><strong>Cartógrafo del significado.</strong> Cada texto se convierte en coordenadas en espacio multidimensional. Busca por proximidad semántica, no por keywords.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap violet"><span class="ext-letter">G</span></div>
+        <div class="ext-name-latin">— Porta Sapientiae —</div>
+        <div class="ext-name">AI Gateway</div>
+        <div class="ext-essence">Proxy LLM con cache, rate limit, observabilidad.</div>
+        <div class="ext-analogy"><strong>Aduana de los oráculos.</strong> Toda llamada a OpenAI, Anthropic, etc. pasa por aquí. Cachea respuestas idénticas, registra costos, controla abuso.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap lapis"><span class="ext-letter">B</span></div>
+        <div class="ext-name-latin">— Speculator —</div>
+        <div class="ext-name">Browser Render</div>
+        <div class="ext-essence">Chrome headless en edge.</div>
+        <div class="ext-analogy"><strong>Espía con ojos.</strong> Renderiza páginas con JS, toma screenshots, genera PDFs, scrapea SPAs. Lo que fetch no puede ver.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap indigo"><span class="ext-letter">H</span></div>
+        <div class="ext-name-latin">— Aquaeductus —</div>
+        <div class="ext-name">Hyperdrive</div>
+        <div class="ext-essence">Connection pool a Postgres/MySQL externo.</div>
+        <div class="ext-analogy"><strong>Acueducto romano.</strong> Mantiene conexiones cálidas a tu DB tradicional. Worker llega, agarra conexión lista, no espera handshake. 10× más rápido.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap amber"><span class="ext-letter">C</span></div>
+        <div class="ext-name-latin">— Promptuarium —</div>
+        <div class="ext-name">Cache API</div>
+        <div class="ext-essence">Cache HTTP explícito en edge (≠ KV).</div>
+        <div class="ext-analogy"><strong>Despensa del posadero.</strong> Cachea respuestas HTTP completas con su Cache-Control. Distinto de KV — éste es el CDN clásico programable.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap dark"><span class="ext-letter">N</span></div>
+        <div class="ext-name-latin">— Vas —</div>
+        <div class="ext-name">Containers</div>
+        <div class="ext-essence">Docker corriendo en CF, beta.</div>
+        <div class="ext-analogy"><strong>Forja medieval.</strong> Para cuando V8 isolate no basta — Python, Rust binaries, GPU work. Más pesado, más capable. Cohabita con Workers.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap verdigris"><span class="ext-letter">S</span></div>
+        <div class="ext-name-latin">— Officina —</div>
+        <div class="ext-name">Sandbox SDK</div>
+        <div class="ext-essence">Code execution remoto en sandboxes aislados.</div>
+        <div class="ext-analogy"><strong>Laboratorio del alquimista.</strong> Ejecuta código no confiable (LLM-generated, user code) en contenedor seguro. Útil para AI agents que escriben y corren código.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap rose"><span class="ext-letter">E</span></div>
+        <div class="ext-name-latin">— Tabellarius —</div>
+        <div class="ext-name">Email Workers</div>
+        <div class="ext-essence">Recibir y rutear email con código.</div>
+        <div class="ext-analogy"><strong>Mensajero del scriptorium.</strong> Configura dominio, los emails entrantes disparan tu Worker. Filtras, parseas, reenvías, archivas — todo programable.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap parchment"><span class="ext-letter">P</span></div>
+        <div class="ext-name-latin">— Folium —</div>
+        <div class="ext-name">Pages</div>
+        <div class="ext-essence">Hosting estático con CI/CD desde Git.</div>
+        <div class="ext-analogy"><strong>Pergamino encuadernado.</strong> Despliegas HTML/CSS/JS estático. Builds automáticos en push. Para SPA o sitios sin lógica server. (Workers Static Assets ya lo absorbe.)</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap lapis"><span class="ext-letter">M</span></div>
+        <div class="ext-name-latin">— Flumen —</div>
+        <div class="ext-name">Stream</div>
+        <div class="ext-essence">Video hosting con transcoding y HLS automático.</div>
+        <div class="ext-analogy"><strong>Río que reparte agua.</strong> Subes video, CF lo transcodifica a múltiples bitrates, sirve HLS adaptativo. Sin gestión de FFmpeg ni CDN.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap rose"><span class="ext-letter">I</span></div>
+        <div class="ext-name-latin">— Imago —</div>
+        <div class="ext-name">Images</div>
+        <div class="ext-essence">CDN de imágenes con transformaciones on-the-fly.</div>
+        <div class="ext-analogy"><strong>Cámara del retratista.</strong> Subes una imagen, pides cualquier resize/format/crop por URL. WebP/AVIF automático. Variants definidos.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap slate"><span class="ext-letter">T</span></div>
+        <div class="ext-name-latin">— Custos Portae —</div>
+        <div class="ext-name">Turnstile</div>
+        <div class="ext-essence">CAPTCHA invisible privacy-first.</div>
+        <div class="ext-analogy"><strong>Guardián de la puerta.</strong> Reemplaza reCAPTCHA. Detecta bots sin frustrar humanos con "selecciona los semáforos". Token validado server-side.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap verdigris"><span class="ext-letter">U</span></div>
+        <div class="ext-name-latin">— Cuniculus —</div>
+        <div class="ext-name">Tunnel</div>
+        <div class="ext-essence">Expone localhost a internet sin abrir puertos.</div>
+        <div class="ext-analogy"><strong>Pasaje secreto del castillo.</strong> Tu localhost se conecta saliendo al edge CF. Internet llega via DNS — tu firewall queda intacto. Cero NAT, cero static IP.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap violet"><span class="ext-letter">F</span></div>
+        <div class="ext-name-latin">— Imperium —</div>
+        <div class="ext-name">Workers for Platforms</div>
+        <div class="ext-essence">Multi-tenant: tus clientes deployan Workers en TU plataforma.</div>
+        <div class="ext-analogy"><strong>Imperio de vasallos.</strong> Tú eres CF para tus clientes. Cada uno deploya su propio Worker bajo tu control. Para SaaS tipo Shopify Apps.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap dark"><span class="ext-letter">Z</span></div>
+        <div class="ext-name-latin">— Limen Sacrum —</div>
+        <div class="ext-name">Zero Trust</div>
+        <div class="ext-essence">Auth gateway antes de tu app.</div>
+        <div class="ext-analogy"><strong>Aduana fronteriza.</strong> Toda request a tu app pasa por verificación de identidad (Google, Okta, GitHub). Apps internas sin VPN.</div>
+      </article>
+
+      <article class="ext-card">
+        <div class="ext-cap teal"><span class="ext-letter">L</span></div>
+        <div class="ext-name-latin">— Annales —</div>
+        <div class="ext-name">Analytics Engine</div>
+        <div class="ext-essence">Time-series database serverless.</div>
+        <div class="ext-analogy"><strong>Cronista del reino.</strong> Cada Worker escribe eventos, tú consultas con SQL como ClickHouse. Dimensiones + métricas. Para analytics, monitoring custom.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ SECTION V — GRAPHUM ============ -->
+  <section class="section" id="pars-v">
+    <div class="section-head">
+      <div class="section-num">V</div>
+      <div class="section-latin">Pars Quinta</div>
+      <h2 class="section-title">Graphum Cosmographicum</h2>
+      <p class="section-sub">Mapa de relaciones entre primitivas. Worker en el centro — toda lógica orquesta desde ahí. Hover sobre cada nodo para ver su rol.</p>
+    </div>
+
+    <div class="graphum">
+      <div class="legend">
+        <div class="legend-title">Familiae</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#f4d8c9"></div>Compute</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#d8e2f4"></div>State</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#e8d8f4"></div>Intellectus</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#d8f4e0"></div>Async</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#f4e0d8"></div>Media</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#f4ead0"></div>Gateway</div>
+      </div>
+
+      <svg class="graph-svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="centerGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fdf2c4"/>
+            <stop offset="60%" stop-color="#d4a843"/>
+            <stop offset="100%" stop-color="#8b6914"/>
+          </radialGradient>
+
+          <filter id="goldGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background ornament -->
+        <g opacity="0.08" stroke="#8b6914" fill="none">
+          <circle cx="600" cy="450" r="180" stroke-dasharray="2,4"/>
+          <circle cx="600" cy="450" r="320" stroke-dasharray="2,4"/>
+          <circle cx="600" cy="450" r="420" stroke-dasharray="2,4"/>
+        </g>
+
+        <!-- Edges layer -->
+        <g id="edges"></g>
+
+        <!-- Nodes layer -->
+        <g id="nodes"></g>
+      </svg>
+
+      <div class="tooltip" id="tooltip">
+        <div class="tt-title"></div>
+        <div class="tt-latin"></div>
+        <div class="tt-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ EPILOGUE ============ -->
+  <section class="section">
+    <div class="epilogue">
+      <div class="epilogue-mark">❦</div>
+      <div class="epilogue-title">Epilogo</div>
+      <div class="epilogue-latin">De Praecisione Necessaria</div>
+      <p>Confundir primitivas produce bugs estructurales. Usar KV para counter genera <strong>race conditions silenciosas</strong>. Usar D1 para session token causa fila en el primary. Usar DO para cache global convierte un solo isolate en cuello de botella global.</p>
+      <p>La verdadera maestría de Cloudflare no consiste en saber usar Workers. Consiste en leer el requirement, identificar el tradeoff dominante — latency contra consistency contra coordination — y mapearlo a la primitiva exacta. <strong>Cuando piensas en propiedades, la elección se vuelve casi mecánica.</strong></p>
+    </div>
+
+    <div class="colophon">
+      <div class="colophon-mark">⁘ ❦ ⁘</div>
+      <div class="colophon-text">Codex compositus · Anno Domini MMXXVI · In nomine Cloudflarensis</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ============ GRAPH DATA ============
+const nodes = [
+  // Center
+  { id: 'worker', name: 'Worker', latin: 'Operarius', body: 'Compute en edge. Orquesta todas las primitivas.', x: 600, y: 450, r: 60, fam: 'center' },
+
+  // Inner orbit — direct state primitives
+  { id: 'kv', name: 'KV', latin: 'Bibliothecarius', body: 'Cache global eventual. Reads ~10ms.', x: 380, y: 320, r: 38, fam: 'state' },
+  { id: 'd1', name: 'D1', latin: 'Tabularium', body: 'SQLite serverless. SQL relacional.', x: 380, y: 580, r: 38, fam: 'state' },
+  { id: 'do', name: 'DO', latin: 'Custos Singularis', body: 'Single-writer per ID. Strong consistency.', x: 600, y: 240, r: 42, fam: 'state' },
+  { id: 'r2', name: 'R2', latin: 'Thesaurus', body: 'Object storage. Zero egress.', x: 820, y: 320, r: 38, fam: 'state' },
+  { id: 'cache', name: 'Cache API', latin: 'Promptuarium', body: 'Cache HTTP explícito edge.', x: 820, y: 580, r: 36, fam: 'state' },
+  { id: 'do-storage', name: 'DO Storage', latin: 'Memoria Custodis', body: 'SQLite local de cada DO.', x: 600, y: 130, r: 28, fam: 'state' },
+
+  // AI / Intellectus cluster (top-right)
+  { id: 'ai', name: 'Workers AI', latin: 'Oraculum', body: 'Inferencia ML en edge.', x: 980, y: 220, r: 38, fam: 'ai' },
+  { id: 'gateway', name: 'AI Gateway', latin: 'Porta Sapientiae', body: 'Proxy LLM con cache + obs.', x: 1080, y: 380, r: 36, fam: 'gateway' },
+  { id: 'vec', name: 'Vectorize', latin: 'Mensor', body: 'Vector DB para RAG.', x: 1080, y: 540, r: 36, fam: 'ai' },
+  { id: 'browser', name: 'Browser', latin: 'Speculator', body: 'Chrome headless edge.', x: 980, y: 700, r: 36, fam: 'ai' },
+
+  // Async cluster (bottom)
+  { id: 'queue', name: 'Queue', latin: 'Cursus Publicus', body: 'Async producer/consumer.', x: 480, y: 760, r: 36, fam: 'async' },
+  { id: 'workflow', name: 'Workflow', latin: 'Ordo Operum', body: 'Multi-step durable replayable.', x: 720, y: 760, r: 36, fam: 'async' },
+  { id: 'email', name: 'Email', latin: 'Tabellarius', body: 'Email entrante → Worker.', x: 600, y: 850, r: 32, fam: 'async' },
+
+  // Specialized compute (left)
+  { id: 'containers', name: 'Containers', latin: 'Vas', body: 'Docker en CF.', x: 200, y: 220, r: 34, fam: 'compute' },
+  { id: 'sandbox', name: 'Sandbox', latin: 'Officina', body: 'Code exec aislado.', x: 130, y: 380, r: 32, fam: 'compute' },
+  { id: 'hyperdrive', name: 'Hyperdrive', latin: 'Aquaeductus', body: 'Pool a Postgres/MySQL.', x: 130, y: 540, r: 34, fam: 'compute' },
+  { id: 'pages', name: 'Pages', latin: 'Folium', body: 'Hosting estático.', x: 200, y: 700, r: 30, fam: 'compute' },
+
+  // Media / specialized (far right)
+  { id: 'images', name: 'Images', latin: 'Imago', body: 'CDN imágenes + transforms.', x: 1080, y: 80, r: 30, fam: 'media' },
+  { id: 'stream', name: 'Stream', latin: 'Flumen', body: 'Video transcoding + HLS.', x: 1140, y: 240, r: 30, fam: 'media' },
+  { id: 'turnstile', name: 'Turnstile', latin: 'Custos Portae', body: 'CAPTCHA invisible.', x: 380, y: 100, r: 28, fam: 'gateway' },
+  { id: 'tunnel', name: 'Tunnel', latin: 'Cuniculus', body: 'localhost → internet.', x: 60, y: 700, r: 26, fam: 'compute' },
+  { id: 'wfp', name: 'W4P', latin: 'Imperium', body: 'Multi-tenant Workers.', x: 200, y: 100, r: 26, fam: 'compute' },
+  { id: 'zerotrust', name: 'Zero Trust', latin: 'Limen Sacrum', body: 'Auth gateway.', x: 1140, y: 100, r: 26, fam: 'gateway' },
+  { id: 'analytics', name: 'Analytics', latin: 'Annales', body: 'Time-series DB.', x: 1140, y: 760, r: 26, fam: 'state' },
+];
+
+const edges = [
+  // Worker is central hub
+  ['worker', 'kv'], ['worker', 'd1'], ['worker', 'do'], ['worker', 'r2'], ['worker', 'cache'],
+  ['worker', 'ai'], ['worker', 'gateway'], ['worker', 'vec'], ['worker', 'browser'],
+  ['worker', 'queue'], ['worker', 'workflow'], ['worker', 'email'],
+  ['worker', 'containers'], ['worker', 'sandbox'], ['worker', 'hyperdrive'],
+  ['worker', 'images'], ['worker', 'stream'], ['worker', 'turnstile'], ['worker', 'analytics'],
+
+  // Internal relationships
+  ['do', 'do-storage'],
+  ['gateway', 'ai'],
+  ['gateway', 'vec'],
+  ['ai', 'vec'],
+  ['workflow', 'queue'],
+  ['workflow', 'do'],
+  ['email', 'queue'],
+  ['pages', 'worker'],
+  ['tunnel', 'worker'],
+  ['wfp', 'worker'],
+  ['zerotrust', 'worker'],
+  ['browser', 'r2'],
+];
+
+// ============ RENDER GRAPH ============
+const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+const edgesG = document.getElementById('edges');
+const nodesG = document.getElementById('nodes');
+const tooltip = document.getElementById('tooltip');
+
+// Render edges
+edges.forEach(([from, to], i) => {
+  const a = nodeMap[from], b = nodeMap[to];
+  if (!a || !b) return;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  // Curved path for variety
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2;
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const curve = Math.min(dist * 0.15, 60);
+  const ox = -dy / dist * curve;
+  const oy = dx / dist * curve;
+  const cx = mx + ox;
+  const cy = my + oy;
+  path.setAttribute('d', `M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`);
+  path.setAttribute('class', 'graph-edge flow');
+  path.dataset.from = from;
+  path.dataset.to = to;
+  path.style.animationDelay = `${(i % 6) * 0.5}s`;
+  edgesG.appendChild(path);
+});
+
+// Render nodes
+nodes.forEach(n => {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', `graph-node ${n.fam}${n.id === 'worker' ? ' center' : ''}`);
+  g.setAttribute('transform', `translate(${n.x}, ${n.y})`);
+  g.dataset.id = n.id;
+
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('class', 'bg');
+  circle.setAttribute('r', n.r);
+  circle.setAttribute('cx', 0);
+  circle.setAttribute('cy', 0);
+  g.appendChild(circle);
+
+  // Inner gold ring
+  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  ring.setAttribute('r', n.r - 5);
+  ring.setAttribute('cx', 0);
+  ring.setAttribute('cy', 0);
+  ring.setAttribute('fill', 'none');
+  ring.setAttribute('stroke', '#8b6914');
+  ring.setAttribute('stroke-width', '0.6');
+  ring.setAttribute('opacity', '0.5');
+  g.appendChild(ring);
+
+  // Label
+  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  label.setAttribute('class', 'label');
+  label.setAttribute('y', n.id === 'worker' ? -2 : 0);
+  label.textContent = n.name;
+  g.appendChild(label);
+
+  // Latin
+  if (n.r >= 30) {
+    const latin = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    latin.setAttribute('class', 'latin');
+    latin.setAttribute('y', n.id === 'worker' ? 14 : 14);
+    latin.textContent = n.latin;
+    g.appendChild(latin);
+  }
+
+  // Hover
+  g.addEventListener('mouseenter', () => highlightNode(n.id));
+  g.addEventListener('mouseleave', () => clearHighlight());
+  g.addEventListener('mousemove', (e) => moveTooltip(e, n));
+
+  nodesG.appendChild(g);
+});
+
+function highlightNode(id) {
+  // Find connected node ids
+  const connected = new Set([id]);
+  edges.forEach(([f, t]) => {
+    if (f === id) connected.add(t);
+    if (t === id) connected.add(f);
+  });
+
+  document.querySelectorAll('.graph-node').forEach(g => {
+    if (!connected.has(g.dataset.id)) g.classList.add('dimmed');
+    else g.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.graph-edge').forEach(e => {
+    if (e.dataset.from === id || e.dataset.to === id) {
+      e.classList.add('highlighted');
+      e.classList.remove('dimmed');
+    } else {
+      e.classList.add('dimmed');
+      e.classList.remove('highlighted');
+    }
+  });
+}
+
+function clearHighlight() {
+  document.querySelectorAll('.graph-node').forEach(g => g.classList.remove('dimmed'));
+  document.querySelectorAll('.graph-edge').forEach(e => {
+    e.classList.remove('dimmed');
+    e.classList.remove('highlighted');
+  });
+  tooltip.classList.remove('visible');
+}
+
+function moveTooltip(e, n) {
+  const rect = document.querySelector('.graphum').getBoundingClientRect();
+  tooltip.style.left = `${e.clientX - rect.left + 16}px`;
+  tooltip.style.top = `${e.clientY - rect.top + 16}px`;
+  tooltip.querySelector('.tt-title').textContent = n.name;
+  tooltip.querySelector('.tt-latin').textContent = `— ${n.latin} —`;
+  tooltip.querySelector('.tt-body').textContent = n.body;
+  tooltip.classList.add('visible');
+}
+
+// ============ GSAP ANIMATIONS ============
+gsap.registerPlugin(ScrollTrigger);
+
+// Initial graph reveal
+gsap.set('.graph-node', { opacity: 0, scale: 0.3, transformOrigin: 'center center' });
+gsap.set('.graph-edge', { opacity: 0, drawSVG: 0 });
+
+ScrollTrigger.create({
+  trigger: '.graphum',
+  start: 'top 70%',
+  once: true,
+  onEnter: () => {
+    // Center first
+    gsap.to('.graph-node.center', {
+      opacity: 1,
+      scale: 1,
+      duration: 1,
+      ease: 'back.out(1.5)'
+    });
+
+    // Other nodes staggered radial
+    gsap.to('.graph-node:not(.center)', {
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      delay: 0.4,
+      stagger: { amount: 1.4, from: 'random' },
+      ease: 'back.out(1.4)'
+    });
+
+    // Edges
+    gsap.to('.graph-edge', {
+      opacity: 0.35,
+      duration: 1.5,
+      delay: 1.2,
+      stagger: 0.02,
+      ease: 'power2.out'
+    });
+  }
+});
+
+// Scroll fade-in for cards
+gsap.utils.toArray('.primitive, .columna, .ext-card, .epilogue, .tabula-wrap, .hero-frame').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 30 },
+    {
+      opacity: 1, y: 0, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    }
+  );
+});
+
+// Center pulse
+gsap.to('.graph-node.center circle.bg', {
+  filter: 'drop-shadow(0 0 24px rgba(212, 168, 67, 0.95))',
+  duration: 2,
+  yoyo: true,
+  repeat: -1,
+  ease: 'sine.inOut'
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Operationibus Cloudflarensibus · Codex Volumen III</title>
+<meta name="description" content="Volumen III del Codex Cloudflarensis: failure modes, cost models, observability, migration playbooks, y límites de performance.">
+<meta property="og:title" content="Codex Cloudflarensis · Volumen III">
+<meta property="og:description" content="De Operationibus — failure modes, cost models, observability, migrations">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+:root {
+  --parchment: #f1e4c4; --parchment-light: #f9efd1; --parchment-dark: #e6d4a8; --parchment-shadow: #c9b685;
+  --ink: #1a0f05; --ink-soft: #3d2a18; --ink-faded: #6b5236;
+  --gold-2: #d4a843; --gold-3: #f5d574; --gold-4: #fdf2c4; --gold-deep: #8b6914;
+  --crimson: #8b1a1a; --crimson-deep: #5e0f0f; --vermillion: #c0392b;
+  --lapis: #1e3a8a; --lapis-deep: #0d1f5c; --azurite: #2a5298;
+  --verdigris: #4a7c59; --malachite: #2d5a3d;
+  --violet: #6b2d99; --violet-deep: #4a1d6e; --amethyst: #8e44c5;
+  --vellum-rule: rgba(26, 15, 5, 0.15);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--parchment); color: var(--ink);
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  font-size: 19px; line-height: 1.6; min-height: 100vh; position: relative; overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 105, 20, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.28   0 0 0 0 0.1   0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: cover, cover, 400px 400px; background-attachment: fixed;
+}
+body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 15, 5, 0.18) 100%); pointer-events: none; z-index: 1; }
+
+.codex { max-width: 1240px; margin: 0 auto; padding: 80px 48px 120px; position: relative; z-index: 2; }
+
+.nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(241, 228, 196, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--gold-deep);
+  padding: 12px 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.nav-bar a { color: var(--ink-soft); text-decoration: none; padding: 4px 12px; border-bottom: 1px solid transparent; transition: all 0.3s; }
+.nav-bar a:hover { color: var(--crimson); border-bottom-color: var(--gold-deep); }
+.nav-bar .nav-current { color: var(--crimson); font-weight: 700; }
+.nav-bar .nav-home { font-family: 'EB Garamond', serif; font-style: italic; letter-spacing: 0.2em; }
+
+.hero { text-align: center; padding: 120px 0 100px; }
+.hero-frame { width: 100%; max-width: 980px; margin: 0 auto; position: relative; padding: 80px 64px; }
+.ornament-corner { position: absolute; width: 90px; height: 90px; pointer-events: none; }
+.ornament-corner.tl { top: 0; left: 0; }
+.ornament-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner.br { bottom: 0; right: 0; transform: scale(-1); }
+
+.eyebrow-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.3em; color: var(--ink-faded); text-transform: uppercase; margin-bottom: 28px; }
+.hero-rule { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-deep), transparent); margin: 0 auto 32px; }
+h1.codex-title { font-family: 'Cinzel Decorative', 'Cinzel', serif; font-weight: 900; font-size: clamp(40px, 6vw, 76px); line-height: 1.05; letter-spacing: 0.02em; color: var(--ink); margin-bottom: 24px; text-transform: uppercase; text-align: center; }
+h1.codex-title .gilt { display: inline-block; font-size: 0.78em; letter-spacing: 0.01em; background: linear-gradient(180deg, var(--gold-3) 0%, var(--gold-2) 30%, var(--gold-deep) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)); animation: shimmer 6s ease-in-out infinite; }
+@keyframes shimmer { 0%, 100% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)) brightness(1); } 50% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.7)) brightness(1.15); } }
+.hero-subtitle { font-family: 'Cinzel', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; margin-bottom: 40px; }
+.hero-lede { font-family: 'Cormorant Garamond', serif; font-size: 22px; line-height: 1.65; font-weight: 400; color: var(--ink-soft); max-width: 640px; margin: 0 auto; font-style: italic; }
+.hero-lede strong { font-style: normal; font-weight: 600; color: var(--crimson); }
+
+.toc { margin-top: 56px; display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+.toc a { color: var(--ink-faded); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.3s, border-color 0.3s; }
+.toc a:hover { color: var(--crimson); border-bottom-color: var(--gold-deep); }
+
+.section-divider { width: 100%; text-align: center; margin: 80px 0 60px; }
+.section-divider svg { display: inline-block; width: 280px; height: 36px; }
+
+.section { margin-bottom: 100px; }
+.section-head { text-align: center; margin-bottom: 60px; }
+.section-num { font-family: 'Cinzel Decorative', serif; font-size: 60px; font-weight: 900; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.08em; margin-bottom: 8px; filter: drop-shadow(0 2px 0 rgba(139, 105, 20, 0.3)); }
+h2.section-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(28px, 4vw, 42px); letter-spacing: 0.04em; color: var(--ink); text-transform: uppercase; margin-bottom: 16px; }
+.section-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; color: var(--crimson); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+.section-sub { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--ink-soft); max-width: 660px; margin: 0 auto; line-height: 1.6; }
+
+/* FAILURE CARDS */
+.failures { display: grid; gap: 24px; }
+.failure {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 36px 44px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 32px;
+  box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 3px var(--parchment) inset, 0 0 0 4px var(--gold-deep) inset, 0 16px 32px -16px rgba(26, 15, 5, 0.25);
+}
+.failure-mark {
+  width: 72px; height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--crimson); background: linear-gradient(135deg, var(--crimson-deep), var(--vermillion));
+  box-shadow: 0 0 0 1px var(--parchment) inset, 0 0 0 2px var(--gold-2) inset;
+  font-family: 'UnifrakturMaguntia', 'Cinzel Decorative', serif; font-size: 44px;
+  background-clip: padding-box;
+}
+.failure-mark span { background: linear-gradient(180deg, var(--gold-4), var(--gold-2) 60%, var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
+.failure-content { display: flex; flex-direction: column; gap: 12px; }
+.failure-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; }
+.failure-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px; letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase; }
+.failure-modes { display: grid; gap: 10px; }
+.fm-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px dotted var(--vellum-rule); }
+.fm-row:last-child { border: none; }
+.fm-mode { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--crimson); font-weight: 700; }
+.fm-impact { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--ink-soft); line-height: 1.5; }
+.fm-impact strong { color: var(--ink); font-weight: 600; }
+.fm-impact code { font-family: 'SF Mono', monospace; font-size: 13px; background: rgba(139, 26, 26, 0.08); padding: 1px 5px; border-radius: 2px; color: var(--crimson-deep); }
+
+.cross-link {
+  margin-top: 12px; padding-top: 12px; border-top: 1px dotted var(--vellum-rule);
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--gold-deep);
+}
+.cross-link a { color: var(--crimson); text-decoration: none; border-bottom: 1px dotted var(--crimson); }
+.cross-link a:hover { color: var(--crimson-deep); border-bottom-style: solid; }
+
+/* COST TABLES */
+.cost-table-wrap {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow); padding: 32px;
+  box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset, 0 24px 48px -24px rgba(26, 15, 5, 0.3);
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+.cost-table-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px; letter-spacing: 0.1em; color: var(--ink); text-transform: uppercase; margin-bottom: 8px; }
+.cost-table-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 16px; }
+table.cost { width: 100%; border-collapse: collapse; font-family: 'Cormorant Garamond', serif; }
+table.cost th, table.cost td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--vellum-rule); }
+table.cost th { font-family: 'Cinzel', serif; font-weight: 600; font-size: 11px; letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; border-bottom: 2px solid var(--gold-deep); }
+table.cost td { font-size: 15px; color: var(--ink-soft); }
+table.cost td.name { font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; }
+table.cost td.price { font-family: 'SF Mono', monospace; font-size: 13px; color: var(--crimson-deep); font-weight: 600; }
+table.cost td.note { font-style: italic; color: var(--ink-faded); font-size: 13px; }
+
+/* WORKED EXAMPLE */
+.worked-example {
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow); padding: 40px 48px;
+  box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 3px var(--parchment) inset, 0 0 0 4px var(--gold-deep) inset;
+  margin-bottom: 24px;
+}
+.we-head { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px dotted var(--vellum-rule); }
+.we-num { flex: 0 0 56px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--gold-deep), var(--gold-2)); border: 2px solid var(--crimson); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel Decorative', serif; font-size: 28px; font-weight: 900; color: var(--parchment-light); box-shadow: 0 0 0 1px var(--parchment) inset; }
+.we-titles {}
+.we-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
+.we-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px; letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase; }
+.we-scenario { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--ink-soft); margin-bottom: 20px; padding: 12px 18px; background: rgba(255, 248, 220, 0.5); border-left: 3px solid var(--gold-deep); }
+.we-calc { display: grid; gap: 8px; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+.we-line { display: grid; grid-template-columns: 1fr auto; gap: 24px; padding: 6px 0; border-bottom: 1px dotted var(--vellum-rule); align-items: baseline; }
+.we-line:last-child { border: none; }
+.we-line .label { color: var(--ink-soft); }
+.we-line .label code { font-family: 'SF Mono', monospace; font-size: 13px; color: var(--crimson-deep); }
+.we-line .value { font-family: 'SF Mono', monospace; font-size: 14px; color: var(--ink); font-weight: 600; }
+.we-total { padding: 12px 0 4px; margin-top: 8px; border-top: 2px solid var(--gold-deep); display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: baseline; }
+.we-total .label { font-family: 'Cinzel', serif; font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--crimson); }
+.we-total .value { font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 24px; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* OBSERVABILITY */
+.obs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.obs-card { background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%); border: 1px solid var(--parchment-shadow); padding: 32px 36px; box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 3px var(--parchment) inset, 0 0 0 4px var(--gold-deep) inset; }
+.obs-num { font-family: 'Cinzel Decorative', serif; font-size: 24px; font-weight: 900; color: var(--gold-deep); margin-bottom: 4px; }
+.obs-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
+.obs-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dotted var(--vellum-rule); }
+.obs-body { font-family: 'Cormorant Garamond', serif; font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 12px; }
+.obs-body code { font-family: 'SF Mono', monospace; font-size: 13px; background: rgba(139, 26, 26, 0.08); padding: 1px 5px; border-radius: 2px; color: var(--crimson-deep); }
+.obs-when { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--gold-deep); padding-top: 8px; border-top: 1px dotted var(--vellum-rule); }
+.obs-when::before { content: '✦ '; }
+
+/* MIGRATIONS */
+.migration { background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%); border: 1px solid var(--parchment-shadow); padding: 40px 48px; box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset; margin-bottom: 24px; }
+.mig-head { text-align: center; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px dotted var(--vellum-rule); }
+.mig-from-to { font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px; letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase; margin-bottom: 6px; }
+.mig-from-to span { color: var(--crimson); }
+.mig-from-to .arrow { font-family: 'Cinzel Decorative', serif; color: var(--gold-deep); margin: 0 12px; font-size: 28px; }
+.mig-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.18em; text-transform: uppercase; }
+.mig-steps { display: grid; gap: 12px; }
+.mig-step { display: grid; grid-template-columns: 36px 1fr; gap: 18px; align-items: baseline; padding: 8px 0; }
+.mig-step-num { font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 22px; color: var(--gold-deep); text-align: center; }
+.mig-step-body { font-family: 'Cormorant Garamond', serif; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+.mig-step-body strong { color: var(--ink); font-weight: 700; }
+.mig-step-body code { font-family: 'SF Mono', monospace; font-size: 13px; background: rgba(139, 26, 26, 0.08); padding: 1px 5px; border-radius: 2px; color: var(--crimson-deep); }
+.mig-warn { margin-top: 16px; padding: 14px 18px; background: rgba(139, 26, 26, 0.08); border-left: 3px solid var(--crimson); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--ink-soft); }
+.mig-warn strong { color: var(--crimson); font-style: normal; }
+
+/* PERFORMANCE TABLE */
+.perf-wrap { background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%); border: 1px solid var(--parchment-shadow); padding: 32px; box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset; overflow-x: auto; }
+table.perf { width: 100%; border-collapse: collapse; font-family: 'Cormorant Garamond', serif; }
+table.perf th, table.perf td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--vellum-rule); }
+table.perf th { font-family: 'Cinzel', serif; font-weight: 600; font-size: 11px; letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; border-bottom: 2px solid var(--gold-deep); }
+table.perf td.name { font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; }
+table.perf td.metric { font-family: 'SF Mono', monospace; font-size: 13px; color: var(--ink); font-weight: 600; }
+table.perf td.note { font-style: italic; color: var(--ink-faded); font-size: 14px; }
+
+/* EPILOGUE */
+.epilogue { background: linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(139, 26, 26, 0.05) 100%), linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%); border: 1px solid var(--parchment-shadow); padding: 56px 64px; box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset, 0 24px 48px -24px rgba(26, 15, 5, 0.3); text-align: center; }
+.epilogue-mark { font-family: 'Cinzel Decorative', serif; font-size: 72px; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; line-height: 1; }
+.epilogue-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; margin-bottom: 8px; }
+.epilogue-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; color: var(--crimson); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 28px; }
+.epilogue p { font-family: 'Cormorant Garamond', serif; font-size: 21px; line-height: 1.7; color: var(--ink-soft); max-width: 720px; margin: 0 auto 18px; }
+.epilogue p strong { font-weight: 700; color: var(--crimson); }
+.epilogue p:first-of-type::first-letter { font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 42px; color: var(--gold-deep); float: left; line-height: 0.9; margin-right: 8px; margin-top: 4px; }
+.colophon { text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--vellum-rule); }
+.colophon-mark { font-family: 'Cinzel Decorative', serif; font-size: 32px; color: var(--gold-deep); margin-bottom: 16px; }
+.colophon-text { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--ink-faded); letter-spacing: 0.15em; text-transform: uppercase; }
+
+@media (max-width: 1000px) { .obs-grid { grid-template-columns: 1fr; } .failure { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .codex { padding: 40px 20px 80px; } .hero-frame { padding: 40px 16px; } .epilogue, .migration, .worked-example { padding: 28px 20px; } .nav-bar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; font-size: 9px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn-corner" viewBox="0 0 90 90">
+      <g fill="none" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 4,4 L 86,4 L 86,16 L 16,16 L 16,86 L 4,86 Z" fill="#d4a843" fill-opacity="0.15" stroke="#8b6914"/>
+        <path d="M 18,18 Q 30,20 36,32 Q 38,42 32,52 Q 22,58 18,52 M 18,18 Q 26,32 18,42 M 32,28 Q 42,22 50,28 Q 58,38 50,46 Q 42,52 36,48"/>
+        <circle cx="22" cy="22" r="2" fill="#8b1a1a"/>
+        <circle cx="38" cy="36" r="1.5" fill="#1e3a8a"/>
+        <path d="M 42,12 Q 50,8 58,12 M 50,12 L 50,4 M 12,42 Q 8,50 12,58 M 12,50 L 4,50"/>
+      </g>
+    </symbol>
+    <symbol id="divider" viewBox="0 0 280 36">
+      <g fill="none" stroke="#8b6914" stroke-width="1.2" stroke-linecap="round">
+        <path d="M 4,18 L 30,18 M 30,18 L 30,10 L 38,10 L 38,26 L 22,26 L 22,14 L 50,14 L 50,22 L 60,22"/>
+        <path d="M 220,22 L 230,22 L 230,14 L 258,14 L 258,26 L 242,26 L 242,10 L 250,10 L 250,18 L 276,18"/>
+        <circle cx="140" cy="18" r="12" stroke="#8b1a1a" stroke-width="1.2" fill="#fdf2c4"/>
+        <circle cx="140" cy="18" r="6" fill="#8b6914"/>
+        <circle cx="140" cy="18" r="2" fill="#fdf2c4"/>
+        <g stroke="#8b6914">
+          <line x1="140" y1="2" x2="140" y2="8"/><line x1="140" y1="28" x2="140" y2="34"/>
+          <line x1="124" y1="18" x2="118" y2="18"/><line x1="156" y1="18" x2="162" y2="18"/>
+          <line x1="129" y1="7" x2="125" y2="3"/><line x1="151" y1="7" x2="155" y2="3"/>
+          <line x1="129" y1="29" x2="125" y2="33"/><line x1="151" y1="29" x2="155" y2="33"/>
+        </g>
+        <line x1="60" y1="18" x2="120" y2="18" stroke-dasharray="2,3"/>
+        <line x1="160" y1="18" x2="220" y2="18" stroke-dasharray="2,3"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">❦ Bibliotheca</a>
+  <div style="display:flex;gap:8px">
+    <a href="volumen-i.html">Vol I · Primitivae</a>
+    <a href="volumen-ii.html">Vol II · Architectura</a>
+    <a href="volumen-iii.html" class="nav-current">Vol III · Operationes</a>
+  </div>
+</nav>
+
+<div class="codex">
+
+  <section class="hero">
+    <div class="hero-frame">
+      <svg class="ornament-corner tl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner tr"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
+      <div class="eyebrow-latin">Codex Cloudflarensis · Volumen III · Folio I</div>
+      <div class="hero-rule"></div>
+      <h1 class="codex-title">De<br><span class="gilt">Operationibus</span></h1>
+      <div class="hero-subtitle">Defectiones · Pretia · Observatio · Migrationes</div>
+      <p class="hero-lede">
+        Saber qué primitivas existen es la teoría. Saber <strong>cómo fallan, cuánto cuestan, cómo observarlas, cómo migrar hacia ellas</strong> es la práctica. Este volumen recoge la operación real del stack — los números, los modos de falla, los playbooks que sólo se aprenden en producción.
+      </p>
+      <nav class="toc">
+        <a href="#pars-i">I · Defectiones</a>
+        <a href="#pars-ii">II · Pretia</a>
+        <a href="#pars-iii">III · Observatio</a>
+        <a href="#pars-iv">IV · Migrationes</a>
+        <a href="#pars-v">V · Limites</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- PARS I — FAILURE MODES -->
+  <section class="section" id="pars-i">
+    <div class="section-head">
+      <div class="section-num">I</div>
+      <div class="section-latin">Pars Prima</div>
+      <h2 class="section-title">Modi Defectionis</h2>
+      <p class="section-sub">Cada primitiva tiene maneras específicas de fallar. Conocerlas no es paranoia — es saber dónde poner monitores, retries, fallbacks.</p>
+    </div>
+
+    <div class="failures">
+
+      <article class="failure">
+        <div class="failure-mark"><span>W</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Operarius Defectus —</div>
+          <div class="failure-title">Worker</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">CPU Limit</div><div class="fm-impact"><strong>10ms free / 30s paid</strong>. Loop infinito o regex catastrófico → <code>Worker exceeded CPU time</code>. Request muere, no hay retry automático.</div></div>
+            <div class="fm-row"><div class="fm-mode">Wall Time</div><div class="fm-impact"><strong>30s default</strong>. Llamada externa lenta + sin timeout = exceedes wall. Diferente de CPU — wall incluye I/O wait.</div></div>
+            <div class="fm-row"><div class="fm-mode">Memory OOM</div><div class="fm-impact"><strong>128MB limit</strong>. Cargar JSON gigante o buffer enorme → kill. Streaming es la solución.</div></div>
+            <div class="fm-row"><div class="fm-mode">Subrequest Limit</div><div class="fm-impact"><strong>50 free / 1000 paid</strong> subrequests por invocation. Loops haciendo fetches → corta.</div></div>
+            <div class="fm-row"><div class="fm-mode">Cold Start</div><div class="fm-impact">~5ms típico, hasta 50ms si import grande. NO es problema usual pero impacta p99 en regiones nuevas.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · Worker (Operarius)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>K</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Bibliothecarius Defectus —</div>
+          <div class="failure-title">KV</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Write Throttle</div><div class="fm-impact"><strong>1 write/sec/key</strong>. Más rápido que esto = HTTP 429. Distribuye writes entre keys o usa DO.</div></div>
+            <div class="fm-row"><div class="fm-mode">Propagation Lag</div><div class="fm-impact"><strong>~60s para propagar globalmente</strong>. Read-after-write en otro PoP puede retornar valor viejo. NO uses para pricing/auth.</div></div>
+            <div class="fm-row"><div class="fm-mode">Read Inconsistency</div><div class="fm-impact">Dos PoPs pueden retornar valores distintos durante propagación. Para idempotencia, lee siempre desde mismo PoP (sticky).</div></div>
+            <div class="fm-row"><div class="fm-mode">Value Size</div><div class="fm-impact"><strong>25MB max value, 512 bytes max key</strong>. Excederlo = error. Para blobs grandes usa R2.</div></div>
+            <div class="fm-row"><div class="fm-mode">List Pagination</div><div class="fm-impact">List operations paginated, complete consistency NO garantizada durante list. Mid-list-add puede no aparecer.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · KV (Bibliothecarius)</a> · <a href="volumen-ii.html#pars-i">Vol II · Pattern I (Cache-Aside)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>D</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Tabularium Defectus —</div>
+          <div class="failure-title">D1</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Primary Saturation</div><div class="fm-impact"><strong>~1000 writes/sec</strong> límite primary. Excederlo = queue + timeouts. Cache-aside KV protege.</div></div>
+            <div class="fm-row"><div class="fm-mode">Replica Staleness</div><div class="fm-impact">Read replicas pueden estar <strong>~10s atrás</strong> del primary. Read-after-write inmediato puede leer datos viejos. <code>read_replication: { mode: 'auto' }</code> mitiga.</div></div>
+            <div class="fm-row"><div class="fm-mode">Query Timeout</div><div class="fm-impact"><strong>30s default</strong>. Joins complejos sin index = timeout. Schema y EXPLAIN ayudan.</div></div>
+            <div class="fm-row"><div class="fm-mode">Database Size</div><div class="fm-impact"><strong>10GB hard limit</strong> por DB. Multi-tenant grande requiere DB-per-tenant o particiones manuales.</div></div>
+            <div class="fm-row"><div class="fm-mode">Migration Locks</div><div class="fm-impact">ALTER TABLE bloquea writes durante el cambio. En producción, plan rolling migrations con dual-write.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · D1 (Tabularium)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>O</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Custos Singularis Defectus —</div>
+          <div class="failure-title">Durable Object</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Migration Window</div><div class="fm-impact">DO migra entre PoPs (load balancing). Durante la migración, requests <strong>pueden ver latencia elevada o errores transient</strong>. Retry handler esencial.</div></div>
+            <div class="fm-row"><div class="fm-mode">Hibernation Wake-up</div><div class="fm-impact">DO idle hiberna. Primera request post-hibernation = <strong>~10-50ms wake-up latency</strong>. Subsecuentes son hot.</div></div>
+            <div class="fm-row"><div class="fm-mode">Storage Limits</div><div class="fm-impact"><strong>10GB SQLite por DO</strong>. Excederlo requiere shard manual.</div></div>
+            <div class="fm-row"><div class="fm-mode">Single-Writer Bottleneck</div><div class="fm-impact">Si TODA tu carga pega 1 DO = bottleneck global. <code>idFromName(...)</code> debe ser por entidad lógica, no global.</div></div>
+            <div class="fm-row"><div class="fm-mode">WebSocket Disconnects</div><div class="fm-impact">Client networks tiran conexiones. <strong>Reconnect logic + state replay</strong> obligatorios. Hibernation no destruye state pero conexiones sí.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · Durable Object (Custos)</a> · <a href="volumen-ii.html#pars-i">Vol II · Pattern VII (Multi-Tenant)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>Q</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Cursus Publicus Defectus —</div>
+          <div class="failure-title">Queue</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">At-Least-Once</div><div class="fm-impact">Cada mensaje puede entregarse <strong>1+ veces</strong>. Sin idempotency en consumer = side effects duplicados.</div></div>
+            <div class="fm-row"><div class="fm-mode">Out-of-Order</div><div class="fm-impact">Sin garantía de orden estricto. Si tu lógica depende de orden, usa DO + Queue (DO ordena, Queue distribuye).</div></div>
+            <div class="fm-row"><div class="fm-mode">Visibility Timeout</div><div class="fm-impact">Consumer tiene <strong>30s default</strong> para procesar antes de redelivery. Trabajos lentos = mensajes duplicados visibles.</div></div>
+            <div class="fm-row"><div class="fm-mode">DLQ Required</div><div class="fm-impact">Tras N reintentos sin DLQ configurado, <strong>mensajes se pierden silenciosamente</strong>. SIEMPRE configura DLQ.</div></div>
+            <div class="fm-row"><div class="fm-mode">Backpressure</div><div class="fm-impact">Producer puede llenar queue más rápido que consumer drena. Monitor lag, scale consumers o slow producer.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · Queue (Cursus Publicus)</a> · <a href="volumen-ii.html#pars-ii">Vol II · Lex Idempotentiae</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>F</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Ordo Operum Defectus —</div>
+          <div class="failure-title">Workflow</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Replay Non-Determinism</div><div class="fm-impact">Si un step usa <code>Date.now()</code>, <code>Math.random()</code>, o lectura externa no-cacheada → replay genera valores distintos → <strong>state divergente</strong>. Captura side effects en steps explícitos.</div></div>
+            <div class="fm-row"><div class="fm-mode">Step Timeout</div><div class="fm-impact">Cada step tiene timeout. Long-running work debe partirse en steps más pequeños o usar <code>step.sleep</code>.</div></div>
+            <div class="fm-row"><div class="fm-mode">Compensation Bugs</div><div class="fm-impact">Saga necesita compensación correcta. Bug en <code>refund()</code> → estado inconsistente irrecuperable. Test compensations exhaustively.</div></div>
+            <div class="fm-row"><div class="fm-mode">Schema Evolution</div><div class="fm-impact">Workflow en vuelo cuando cambias código → replay con código nuevo puede romper. Versioning de workflows obligatorio.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · Workflow (Ordo Operum)</a> · <a href="volumen-ii.html#pars-i">Vol II · Pattern III (Saga)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>H</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Aquaeductus Defectus —</div>
+          <div class="failure-title">Hyperdrive</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Pool Exhaustion</div><div class="fm-impact">Si tu DB origen tiene <strong>max_connections=100</strong> y traffic pico requiere más, queries esperan o fallan. Configura pool size acorde.</div></div>
+            <div class="fm-row"><div class="fm-mode">Query Cache Staleness</div><div class="fm-impact">Hyperdrive cachea SELECT queries idénticas. Updates en DB pueden no reflejarse hasta TTL expire. Disable cache en queries críticas.</div></div>
+            <div class="fm-row"><div class="fm-mode">Origin Down</div><div class="fm-impact">Hyperdrive no es replicación — si Postgres origen cae, queries fallan. No es failover automático.</div></div>
+            <div class="fm-row"><div class="fm-mode">Region Latency</div><div class="fm-impact">Worker en Europa + Postgres en us-east = pool warm pero query cruza océano. Co-locate origen al traffic dominante.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · Hyperdrive (Aquaeductus)</a></div>
+        </div>
+      </article>
+
+      <article class="failure">
+        <div class="failure-mark"><span>R</span></div>
+        <div class="failure-content">
+          <div class="failure-latin">— Thesaurus Defectus —</div>
+          <div class="failure-title">R2</div>
+          <div class="failure-modes">
+            <div class="fm-row"><div class="fm-mode">Eventual Listing</div><div class="fm-impact">PUT objeto + LIST inmediato puede no incluirlo. List es eventually consistent. Object reads son strong.</div></div>
+            <div class="fm-row"><div class="fm-mode">Multipart Required</div><div class="fm-impact">Objects &gt; 5GB requieren <strong>multipart upload</strong>. Streaming upload simple falla.</div></div>
+            <div class="fm-row"><div class="fm-mode">Class A Cost Trap</div><div class="fm-impact">Operaciones de escritura (Class A) cuestan ~10× operaciones lectura (Class B). Bulk uploads con muchos archivos pequeños = factura inesperada.</div></div>
+            <div class="fm-row"><div class="fm-mode">No Server-Side Compute</div><div class="fm-impact">A diferencia de S3 (Lambda triggers), R2 no tiene triggers nativos. Procesamiento async via Worker + Queue.</div></div>
+          </div>
+          <div class="cross-link">→ <a href="volumen-i.html">Ver Vol I · R2 (Thesaurus)</a></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- PARS II — COST -->
+  <section class="section" id="pars-ii">
+    <div class="section-head">
+      <div class="section-num">II</div>
+      <div class="section-latin">Pars Secunda</div>
+      <h2 class="section-title">Aestimatio Pretii</h2>
+      <p class="section-sub">Precios oficiales por primitiva, más tres ejemplos calculados en escenarios reales. Saber el costo de un diseño antes de construirlo separa al arquitecto del entusiasta.</p>
+    </div>
+
+    <div class="cost-table-wrap">
+      <div class="cost-table-title">Pricing Compute · Workers</div>
+      <div class="cost-table-latin">— De Operario —</div>
+      <table class="cost">
+        <thead><tr><th>Plan</th><th>Incluido</th><th>Excedente</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Free</td><td class="price">100K req/día</td><td class="note">No disponible</td><td class="note">10ms CPU max</td></tr>
+          <tr><td class="name">Paid $5/mes</td><td class="price">10M req/mes</td><td class="price">$0.30 / M req</td><td class="note">30s wall, 50ms CPU</td></tr>
+          <tr><td class="name">Standard CPU</td><td class="price">30M CPU-ms/mes</td><td class="price">$0.02 / M CPU-ms</td><td class="note">Cobra solo CPU activo, no wall</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cost-table-wrap">
+      <div class="cost-table-title">Pricing State</div>
+      <div class="cost-table-latin">— De Custodibus Datorum —</div>
+      <table class="cost">
+        <thead><tr><th>Primitiva</th><th>Lectura</th><th>Escritura</th><th>Storage</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td class="name">KV</td><td class="price">$0.50 / M reads</td><td class="price">$5.00 / M writes</td><td class="price">$0.50 / GB-mo</td><td class="note">Free: 100K reads, 1K writes/día</td></tr>
+          <tr><td class="name">D1</td><td class="price">$0.001 / M rows read</td><td class="price">$1.00 / M rows written</td><td class="price">$0.75 / GB-mo</td><td class="note">Free: 5M reads, 100K writes/día</td></tr>
+          <tr><td class="name">DO</td><td class="price">$0.15 / M req</td><td class="price">incluido</td><td class="price">$0.20 / GB-mo storage SQLite</td><td class="note">+ duration $12.50 / M GB-s</td></tr>
+          <tr><td class="name">R2</td><td class="price">Class B $0.36 / M ops</td><td class="price">Class A $4.50 / M ops</td><td class="price">$0.015 / GB-mo</td><td class="note"><strong>Egress GRATIS</strong> (vs S3 $0.09/GB)</td></tr>
+          <tr><td class="name">Vectorize</td><td class="price">$0.04 / M dim queried</td><td class="price">$0.04 / M dim stored</td><td class="price">incluido en queried</td><td class="note">Free: 30M queried/mo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cost-table-wrap">
+      <div class="cost-table-title">Pricing Async + AI</div>
+      <div class="cost-table-latin">— De Asynchronia et Intellectu —</div>
+      <table class="cost">
+        <thead><tr><th>Primitiva</th><th>Operación</th><th>Precio</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Queue</td><td class="note">Operations (push + pull + delete)</td><td class="price">$0.40 / M ops</td><td class="note">Free: 1M ops/mo</td></tr>
+          <tr><td class="name">Workflow</td><td class="note">Step invocations</td><td class="price">~Workers pricing</td><td class="note">Cobra como Worker req</td></tr>
+          <tr><td class="name">Workers AI</td><td class="note">Por modelo, por token</td><td class="price">Llama 3.1 8B: ~$0.10 / M tokens</td><td class="note">10K neurons free/día</td></tr>
+          <tr><td class="name">AI Gateway</td><td class="note">Proxy</td><td class="price">$0 base + storage cache</td><td class="note">Cache hit ahorra costo LLM externo</td></tr>
+          <tr><td class="name">Browser Render</td><td class="note">Per session</td><td class="price">$0.09 per browser-hour</td><td class="note">Sessions de pocos segundos típico</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="worked-example">
+      <div class="we-head">
+        <div class="we-num">I</div>
+        <div class="we-titles">
+          <div class="we-latin">— Exemplum Primum —</div>
+          <div class="we-title">SmartLinks · 1M clicks/día</div>
+        </div>
+      </div>
+      <div class="we-scenario">URL shortener servicio. 1 millón de clicks por día (~12 rps promedio, picos 100 rps). Cache-aside KV con 99% hit ratio. Click counter en DO con flush cada 30s. Analytics async vía Queue.</div>
+      <div class="we-calc">
+        <div class="we-line"><div class="label">Worker requests · 30M/mes</div><div class="value">$5 + (20M × $0.30/M) = <strong>$11</strong></div></div>
+        <div class="we-line"><div class="label">KV reads · 30M/mes (99% hit)</div><div class="value">30M × $0.50/M = <strong>$15</strong></div></div>
+        <div class="we-line"><div class="label">D1 reads · 300K/mes (1% miss)</div><div class="value"><strong>$0</strong> (free tier)</div></div>
+        <div class="we-line"><div class="label">DO requests · 30M flushes/mes</div><div class="value">30M × $0.15/M = <strong>$4.50</strong></div></div>
+        <div class="we-line"><div class="label">Queue ops · 60M/mes (push+pull)</div><div class="value">60M × $0.40/M = <strong>$24</strong></div></div>
+        <div class="we-line"><div class="label">D1 writes events · 30M/mes</div><div class="value">30M × $1/M = <strong>$30</strong></div></div>
+        <div class="we-total"><div class="label">Total Mensual</div><div class="value">≈ $85 USD</div></div>
+      </div>
+    </div>
+
+    <div class="worked-example">
+      <div class="we-head">
+        <div class="we-num">II</div>
+        <div class="we-titles">
+          <div class="we-latin">— Exemplum Secundum —</div>
+          <div class="we-title">AI Agent · 10K conversaciones/mes</div>
+        </div>
+      </div>
+      <div class="we-scenario">Chatbot RAG. 10K conversaciones × 8 mensajes promedio = 80K LLM calls/mes. Vectorize search. AI Gateway con 40% cache hit. LLM externo (Claude Sonnet vía gateway).</div>
+      <div class="we-calc">
+        <div class="we-line"><div class="label">Worker requests · 80K/mes</div><div class="value"><strong>$5</strong> (dentro de plan)</div></div>
+        <div class="we-line"><div class="label">Vectorize queries · 80K × 1024 dim</div><div class="value">82M dim × $0.04/M = <strong>$3.28</strong></div></div>
+        <div class="we-line"><div class="label">DO conversation state · 80K req</div><div class="value"><strong>$0.01</strong></div></div>
+        <div class="we-line"><div class="label">LLM calls · 48K (60% miss)</div><div class="value">~$0.025 ea = <strong>$1,200</strong></div></div>
+        <div class="we-line"><div class="label">AI Gateway cache savings</div><div class="value">−$800 (40% hit)</div></div>
+        <div class="we-line"><div class="label">D1 history · 80K writes</div><div class="value"><strong>$0</strong> (free)</div></div>
+        <div class="we-total"><div class="label">Total Mensual</div><div class="value">≈ $408 USD</div></div>
+      </div>
+    </div>
+
+    <div class="worked-example">
+      <div class="we-head">
+        <div class="we-num">III</div>
+        <div class="we-titles">
+          <div class="we-latin">— Exemplum Tertium —</div>
+          <div class="we-title">Multi-Tenant SaaS · 100 tenants activos</div>
+        </div>
+      </div>
+      <div class="we-scenario">SaaS B2B con DO-per-tenant. 100 tenants × 1K req/día/tenant = 3M req/mes total. Dashboard reads cacheados en KV. State crítico en DO. Datos compartidos en D1.</div>
+      <div class="we-calc">
+        <div class="we-line"><div class="label">Worker requests · 3M/mes</div><div class="value"><strong>$5</strong> (within plan)</div></div>
+        <div class="we-line"><div class="label">DO requests · 3M (1 per req)</div><div class="value">3M × $0.15/M = <strong>$0.45</strong></div></div>
+        <div class="we-line"><div class="label">DO duration · ~100GB-s</div><div class="value">100 × $12.50/M GB-s = <strong>$1.25</strong></div></div>
+        <div class="we-line"><div class="label">DO storage · 100 × 50MB = 5GB</div><div class="value">5GB × $0.20 = <strong>$1</strong></div></div>
+        <div class="we-line"><div class="label">KV cache reads · 3M</div><div class="value">3M × $0.50/M = <strong>$1.50</strong></div></div>
+        <div class="we-line"><div class="label">D1 shared data · &lt;1GB</div><div class="value"><strong>$0.75</strong></div></div>
+        <div class="we-total"><div class="label">Total Mensual</div><div class="value">≈ $10 USD · ~$0.10/tenant</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- PARS III — OBSERVABILITY -->
+  <section class="section" id="pars-iii">
+    <div class="section-head">
+      <div class="section-num">III</div>
+      <div class="section-latin">Pars Tertia</div>
+      <h2 class="section-title">Observatio</h2>
+      <p class="section-sub">No puedes mejorar lo que no puedes medir. Las herramientas para ver dentro del stack — desde live tail hasta time-series custom.</p>
+    </div>
+
+    <div class="obs-grid">
+
+      <article class="obs-card">
+        <div class="obs-num">I</div>
+        <div class="obs-latin">— Visio Vivax —</div>
+        <div class="obs-title">Tail Workers</div>
+        <div class="obs-body">Stream live de logs de tu Worker en producción. <code>wrangler tail</code> muestra <code>console.log</code>, errors, requests en tiempo real. Filter por status, sampling rate, predicate.</div>
+        <div class="obs-body"><code>wrangler tail my-worker --status error --sampling-rate 0.1</code></div>
+        <div class="obs-when">Cuándo: debugging activo, repro en producción, demo en vivo.</div>
+      </article>
+
+      <article class="obs-card">
+        <div class="obs-num">II</div>
+        <div class="obs-latin">— Annales Externi —</div>
+        <div class="obs-title">Logpush</div>
+        <div class="obs-body">Exporta logs a destino externo: R2, S3, Datadog, Sentry, Splunk. Configurable per-worker. Logs incluyen request, response, headers, timing, errors. JSON estructurado.</div>
+        <div class="obs-body">Setup: dashboard CF → Logs → Logpush → destino + dataset.</div>
+        <div class="obs-when">Cuándo: retención larga, integración con stack observability existente, compliance.</div>
+      </article>
+
+      <article class="obs-card">
+        <div class="obs-num">III</div>
+        <div class="obs-latin">— Annales Tempore —</div>
+        <div class="obs-title">Analytics Engine</div>
+        <div class="obs-body">Time-series database serverless propia. Worker escribe events con dimensiones + métricas. Query con SQL como ClickHouse. <strong>Casi gratis</strong>, alta cardinalidad OK.</div>
+        <div class="obs-body"><code>env.AE.writeDataPoint({ blobs: ['user-id'], doubles: [latency], indexes: ['endpoint'] })</code></div>
+        <div class="obs-when">Cuándo: métricas custom de producto, dashboards internos, alerting basado en business metrics.</div>
+      </article>
+
+      <article class="obs-card">
+        <div class="obs-num">IV</div>
+        <div class="obs-latin">— Tracing Distributum —</div>
+        <div class="obs-title">Workers Tracing</div>
+        <div class="obs-body">OpenTelemetry support para tracing cross-worker. Visualiza qué Worker llamó a qué DO/KV/D1. Identifica latencia hidden en service bindings.</div>
+        <div class="obs-body">Sentry, Honeycomb, Datadog APM lo consumen vía OTLP.</div>
+        <div class="obs-when">Cuándo: arquitecturas con &gt;3 workers vinculados, debugging latencia p99, AI orchestration.</div>
+      </article>
+
+      <article class="obs-card">
+        <div class="obs-num">V</div>
+        <div class="obs-latin">— Observatio Cliens —</div>
+        <div class="obs-title">RUM · Real User Monitoring</div>
+        <div class="obs-body">Cloudflare Web Analytics o Browser Insights. Mide Core Web Vitals (LCP, INP, CLS) desde browsers reales. Sin cookies, sin tracking pixels.</div>
+        <div class="obs-body">Setup: 1 line snippet en HTML. Dashboard nativo CF.</div>
+        <div class="obs-when">Cuándo: optimizar frontend perceived performance, A/B tests, regression detection.</div>
+      </article>
+
+      <article class="obs-card">
+        <div class="obs-num">VI</div>
+        <div class="obs-latin">— Pulsus Sanitatis —</div>
+        <div class="obs-title">Health Checks + Alerting</div>
+        <div class="obs-body">Cron Triggers + Worker health endpoint. Worker hace checks periódicos, escribe a Analytics Engine, dispara webhook si falla. <strong>Builds your own Pingdom.</strong></div>
+        <div class="obs-body">Combinar con Discord/Slack/Email Workers para alertas.</div>
+        <div class="obs-when">Cuándo: dependencies externas críticas, SLA monitoring, on-call rotations.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- PARS IV — MIGRATIONS -->
+  <section class="section" id="pars-iv">
+    <div class="section-head">
+      <div class="section-num">IV</div>
+      <div class="section-latin">Pars Quarta</div>
+      <h2 class="section-title">Migrationes</h2>
+      <p class="section-sub">Playbooks para mover sistemas existentes hacia Cloudflare. Cada migración tiene su orden óptimo — conocerlo evita meses de fricción.</p>
+    </div>
+
+    <div class="migration">
+      <div class="mig-head">
+        <div class="mig-from-to"><span>Express / Node</span><span class="arrow">→</span><span>Workers</span></div>
+        <div class="mig-latin">— Migratio Prima · De Servo Tradicional ad Operarium —</div>
+      </div>
+      <div class="mig-steps">
+        <div class="mig-step"><div class="mig-step-num">I</div><div class="mig-step-body"><strong>Audit dependencies</strong>. Workers no tiene Node APIs (<code>fs</code>, <code>net</code>, <code>child_process</code>). Identifica usos. Reemplaza con Web Standards (<code>fetch</code>, <code>Web Crypto</code>, <code>Streams</code>).</div></div>
+        <div class="mig-step"><div class="mig-step-num">II</div><div class="mig-step-body"><strong>Reemplaza framework</strong>. Express no corre en Workers. Migra a <strong>Hono</strong> (más cercano a Express) o <strong>itty-router</strong> (minimal). API similar, fetch-based.</div></div>
+        <div class="mig-step"><div class="mig-step-num">III</div><div class="mig-step-body"><strong>Estado en sesiones</strong>. Express usa <code>req.session</code> in-memory. Workers son stateless. Mueve a <strong>JWT en cookie</strong> (stateless) o <strong>DO con session ID</strong> (stateful).</div></div>
+        <div class="mig-step"><div class="mig-step-num">IV</div><div class="mig-step-body"><strong>Database connection</strong>. Si Postgres, agrega <strong>Hyperdrive</strong>. Si rediseñas, considera <strong>D1</strong>. Conexión TCP per-request mata performance — Hyperdrive obligatorio.</div></div>
+        <div class="mig-step"><div class="mig-step-num">V</div><div class="mig-step-body"><strong>Background jobs</strong>. <code>setInterval</code> no funciona. Reemplaza con <strong>Cron Triggers</strong> (Worker corre on schedule) o <strong>Queues</strong> (jobs reactivos).</div></div>
+        <div class="mig-step"><div class="mig-step-num">VI</div><div class="mig-step-body"><strong>Static files</strong>. Express <code>express.static</code> → <strong>Workers Static Assets</strong> (nuevo, integrado) o <strong>R2 público</strong> con custom domain.</div></div>
+        <div class="mig-step"><div class="mig-step-num">VII</div><div class="mig-step-body"><strong>Env vars + secrets</strong>. <code>process.env</code> → <code>env.MY_VAR</code> en handler. Secrets via <code>wrangler secret put</code>. Bindings declarados en <code>wrangler.toml</code>.</div></div>
+      </div>
+      <div class="mig-warn"><strong>Warning:</strong> Apps con sockets persistentes (chat con Socket.io, etc.) requieren rediseño completo a DO + WebSockets. No es port directo.</div>
+    </div>
+
+    <div class="migration">
+      <div class="mig-head">
+        <div class="mig-from-to"><span>Postgres</span><span class="arrow">→</span><span>D1</span></div>
+        <div class="mig-latin">— Migratio Secunda · De Tabulario Maximo ad Tabularium Edicto —</div>
+      </div>
+      <div class="mig-steps">
+        <div class="mig-step"><div class="mig-step-num">I</div><div class="mig-step-body"><strong>Validate fit</strong>. D1 tiene 10GB hard limit, ~1K writes/sec, sólo SQLite (subset SQL). Si tu DB &gt;10GB o usa stored procedures complejos, <strong>quédate en Postgres + Hyperdrive</strong>.</div></div>
+        <div class="mig-step"><div class="mig-step-num">II</div><div class="mig-step-body"><strong>Schema translation</strong>. PG → SQLite: <code>SERIAL</code> → <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, <code>JSONB</code> → <code>TEXT</code> con JSON funciones, <code>UUID</code> → <code>TEXT</code>, no <code>arrays</code>.</div></div>
+        <div class="mig-step"><div class="mig-step-num">III</div><div class="mig-step-body"><strong>Export data</strong>. <code>pg_dump --data-only --inserts</code>. Edita schema diffs. <strong>Sqlite3-compatible SQL.</strong></div></div>
+        <div class="mig-step"><div class="mig-step-num">IV</div><div class="mig-step-body"><strong>Import a D1</strong>. <code>wrangler d1 execute MY_DB --file=dump.sql</code>. Para datasets grandes (&gt;100K rows), batches de 5K-10K.</div></div>
+        <div class="mig-step"><div class="mig-step-num">V</div><div class="mig-step-body"><strong>Reescribe queries</strong>. ORMs: <strong>Drizzle</strong> tiene driver D1. Prisma TODAVÍA no oficial (workaround: <code>@prisma/adapter-d1</code>).</div></div>
+        <div class="mig-step"><div class="mig-step-num">VI</div><div class="mig-step-body"><strong>Indexes</strong>. SQLite indexes son simples — añade EXPLAIN QUERY PLAN para identificar full scans. Compound indexes para queries frecuentes.</div></div>
+        <div class="mig-step"><div class="mig-step-num">VII</div><div class="mig-step-body"><strong>Dual-write period</strong>. Para cero downtime: Worker escribe a ambos (PG + D1) durante semana, lee de D1. Verifica consistency. Apaga PG.</div></div>
+      </div>
+      <div class="mig-warn"><strong>Warning:</strong> Si usas extensions (PostGIS, pgvector, full-text search), D1 NO las soporta. Considera <strong>Vectorize</strong> (vectors), <strong>Workers AI</strong> (embeddings), o quédate en PG.</div>
+    </div>
+
+    <div class="migration">
+      <div class="mig-head">
+        <div class="mig-from-to"><span>AWS Lambda</span><span class="arrow">→</span><span>Workers</span></div>
+        <div class="mig-latin">— Migratio Tertia · De Servo Sine Servo ad Operarium —</div>
+      </div>
+      <div class="mig-steps">
+        <div class="mig-step"><div class="mig-step-num">I</div><div class="mig-step-body"><strong>Cold start</strong>. Lambda cold start ~100-1000ms. Workers ~5ms. <strong>Quitar warmup hacks</strong> (Lambda warmer schedule, etc.) — ya no aplican.</div></div>
+        <div class="mig-step"><div class="mig-step-num">II</div><div class="mig-step-body"><strong>Event sources</strong>. Lambda tiene S3, SQS, EventBridge, etc. Mapea: <strong>S3 → R2 events</strong> (limitado, vía Worker poll), <strong>SQS → Queues</strong>, <strong>API Gateway → Worker fetch</strong>.</div></div>
+        <div class="mig-step"><div class="mig-step-num">III</div><div class="mig-step-body"><strong>VPC connectivity</strong>. Lambda en VPC accede recursos privados. Workers no tienen VPC — usa <strong>Tunnel</strong> para exponer servicios on-prem o bring-your-own a CF.</div></div>
+        <div class="mig-step"><div class="mig-step-num">IV</div><div class="mig-step-body"><strong>IAM roles</strong>. Lambda tiene IAM role. Workers usan <strong>secrets + bindings</strong>. Migra credentials AWS a secrets si necesitas seguir llamando S3/RDS.</div></div>
+        <div class="mig-step"><div class="mig-step-num">V</div><div class="mig-step-body"><strong>Step Functions → Workflows</strong>. AWS Step Functions tiene 1:1 con CF Workflows. Reescribe state machine en TS con steps.</div></div>
+        <div class="mig-step"><div class="mig-step-num">VI</div><div class="mig-step-body"><strong>DynamoDB → DO o D1</strong>. Single-table design DynamoDB → DO con SQLite local. GSIs → indices D1. Streams → Workflow listeners.</div></div>
+      </div>
+      <div class="mig-warn"><strong>Warning:</strong> Lambda 15min timeout. Workers 30s wall paid. Long-running jobs: Workflow + sleep, no Worker directo.</div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- PARS V — PERFORMANCE LIMITS -->
+  <section class="section" id="pars-v">
+    <div class="section-head">
+      <div class="section-num">V</div>
+      <div class="section-latin">Pars Quinta</div>
+      <h2 class="section-title">Limites Performantiae</h2>
+      <p class="section-sub">Los números reales que debes memorizar. Cuando alguien te pregunta "¿escala a X?", la respuesta vive en esta tabla.</p>
+    </div>
+
+    <div class="perf-wrap">
+      <table class="perf">
+        <thead><tr><th>Primitiva</th><th>Métrica</th><th>Valor Típico</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td class="name" rowspan="4">Worker</td><td class="note">Cold start</td><td class="metric">~5ms</td><td class="note">Up to 50ms con bundle grande</td></tr>
+          <tr><td class="note">CPU time</td><td class="metric">10ms free / 50ms paid / 30s standard</td><td class="note">Por request</td></tr>
+          <tr><td class="note">Wall time</td><td class="metric">30s default</td><td class="note">Configurable hasta 15min</td></tr>
+          <tr><td class="note">Memory</td><td class="metric">128MB</td><td class="note">Hard limit</td></tr>
+
+          <tr><td class="name" rowspan="3">KV</td><td class="note">Read p50</td><td class="metric">~10ms</td><td class="note">Cache hit edge local</td></tr>
+          <tr><td class="note">Write throughput</td><td class="metric">1 / sec / key</td><td class="note">Hard rate limit</td></tr>
+          <tr><td class="note">Propagation</td><td class="metric">~60s globalmente</td><td class="note">Eventual consistency</td></tr>
+
+          <tr><td class="name" rowspan="3">D1</td><td class="note">Query p50</td><td class="metric">~5-30ms (read replica)</td><td class="note">Primary write ~50-100ms</td></tr>
+          <tr><td class="note">Write throughput</td><td class="metric">~1000 / sec primary</td><td class="note">Single primary</td></tr>
+          <tr><td class="note">Database size</td><td class="metric">10GB hard limit</td><td class="note">Per database</td></tr>
+
+          <tr><td class="name" rowspan="4">Durable Object</td><td class="note">Request rate</td><td class="metric">~1000 / sec / DO</td><td class="note">Single-writer</td></tr>
+          <tr><td class="note">Wake from hibernation</td><td class="metric">~10-50ms</td><td class="note">Primera request</td></tr>
+          <tr><td class="note">SQLite storage</td><td class="metric">10GB / DO</td><td class="note">Hard limit</td></tr>
+          <tr><td class="note">In-memory state</td><td class="metric">~128MB</td><td class="note">Mismo que Worker</td></tr>
+
+          <tr><td class="name" rowspan="3">Queue</td><td class="note">Throughput</td><td class="metric">5K msg/sec / queue</td><td class="note">Sustained</td></tr>
+          <tr><td class="note">Visibility timeout</td><td class="metric">30s default</td><td class="note">Configurable</td></tr>
+          <tr><td class="note">Max retention</td><td class="metric">4 días</td><td class="note">Antes de DLQ</td></tr>
+
+          <tr><td class="name" rowspan="2">Workers AI</td><td class="note">Llama 3.1 8B TTFT</td><td class="metric">~200-500ms</td><td class="note">Time to first token</td></tr>
+          <tr><td class="note">Llama 3.3 70B TTFT</td><td class="metric">~1-2s</td><td class="note">Slower model</td></tr>
+
+          <tr><td class="name">R2</td><td class="note">PUT throughput</td><td class="metric">~100MB/s / object</td><td class="note">Multipart para &gt;5GB</td></tr>
+
+          <tr><td class="name">Hyperdrive</td><td class="note">Pool warm latency</td><td class="metric">+0-2ms vs direct</td><td class="note">Vs ~50-200ms cold connection</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- EPILOGUE -->
+  <section class="section">
+    <div class="epilogue">
+      <div class="epilogue-mark">❦</div>
+      <div class="epilogue-title">Epilogo</div>
+      <div class="epilogue-latin">De Disciplina Operationis</div>
+      <p>El arquitecto que sólo conoce primitivas y patrones es teórico. El arquitecto que opera sin medir es supersticioso. La maestría completa requiere las tres dimensiones: <strong>qué existe</strong> (Vol I), <strong>cómo componer</strong> (Vol II), <strong>cómo opera en el mundo real</strong> (Vol III).</p>
+      <p>Los números de este volumen cambian — Cloudflare publica nuevos pricing, sube ceilings, añade primitivas. <strong>La disciplina es revisitar</strong>. Mide tu sistema cada trimestre contra la tabla de límites. Calcula tu factura proyectada antes de cada nuevo feature. Audita logs después de cada deploy. La operación es ritual, no episodio.</p>
+      <p>Volumen completado. La trilogía cierra. El arquitecto ahora tiene mapa de territorio (I), gramática de composición (II), y manual de operación (III). Lo que falta no se enseña — se practica.</p>
+    </div>
+
+    <div class="colophon">
+      <div class="colophon-mark">⁘ ❦ ⁘</div>
+      <div class="colophon-text">Volumen III compositus · Trilogia consummata · Anno Domini MMXXVI · In nomine Cloudflarensis</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.failure, .obs-card, .migration, .worked-example, .cost-table-wrap, .perf-wrap, .epilogue, .hero-frame').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    }
+  );
+});
+</script>
+
+</body>
+</html>
