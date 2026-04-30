@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Codex Cloudflarensis · Bibliotheca</title>
 <meta name="description" content="Codex iluminado sobre primitivas y arquitectura de Cloudflare. Manuscrito digital en estilo griego-renacentista.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="Codex Cloudflarensis · Trilogía Iluminada">
+<meta property="og:description" content="Manuscrito digital griego-renacentista sobre el stack Cloudflare. Tres volúmenes: Primitivas · Arquitectura · Operación.">
+<meta property="og:image" content="https://codex.eigenatlas.com/og.png">
+<meta property="og:url" content="https://codex.eigenatlas.com">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://codex.eigenatlas.com/og.png">
+<meta name="twitter:title" content="Codex Cloudflarensis · Trilogía Iluminada">
+<meta name="twitter:description" content="Manuscrito digital sobre el stack Cloudflare. Primitivas · Arquitectura · Operación.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
@@ -213,10 +224,10 @@ h2 {
 
 .volumes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
-@media (max-width: 1100px) { .volumes-grid { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 900px) { .volumes-grid { grid-template-columns: 1fr; gap: 32px; } }
 
 .volume {
   position: relative;
@@ -534,12 +545,12 @@ h2 {
       <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
       <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
 
-      <div class="eyebrow-latin">Bibliotheca Cloudflarensis · Trilogia Completa</div>
+      <div class="eyebrow-latin">Bibliotheca Cloudflarensis · Tetralogia Completa</div>
       <div class="hero-rule"></div>
       <h1>Codex<br><span class="gilt">Cloudflarensis</span></h1>
-      <div class="hero-subtitle">Manuscriptum Illuminatum · Tres Volumina</div>
+      <div class="hero-subtitle">Manuscriptum Illuminatum · Quattuor Volumina</div>
       <p class="hero-lede">
-        Trilogía iluminada sobre el stack Cloudflare: <strong>las primitivas</strong>, <strong>la arquitectura</strong>, <strong>la operación</strong>. Tractado en estilo griego-renacentista, escrito como manuscrito digital — para arquitectos que valoran el detalle y la profundidad.
+        Tetralogía iluminada sobre el stack Cloudflare: <strong>las primitivas</strong>, <strong>la arquitectura</strong>, <strong>la operación</strong>, y los <strong>verticales</strong>. Tractado en estilo griego-renacentista, escrito como manuscrito digital — para arquitectos que valoran el detalle y la profundidad.
       </p>
     </div>
   </section>
@@ -660,6 +671,40 @@ h2 {
         </div>
       </a>
 
+      <a href="volumen-iv.html" class="volume">
+        <svg class="volume-corner tl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner tr"><use href="#orn-small"/></svg>
+        <svg class="volume-corner bl"><use href="#orn-small"/></svg>
+        <svg class="volume-corner br"><use href="#orn-small"/></svg>
+
+        <div class="vol-header">
+          <div class="vol-spine">
+            <div class="vol-spine-num">IV</div>
+            <div class="vol-spine-label">Volumen</div>
+          </div>
+          <div class="vol-titles">
+            <div class="vol-latin">— De Verticalibus —</div>
+            <div class="vol-title">Los Verticales</div>
+          </div>
+        </div>
+
+        <div class="vol-body">
+          Playbooks aplicados por vertical: Medical, Hospitality, Pharma, B2B SaaS. Arquitectura específica, mapping primitiva-función, proyección de costos, y secuencia de onboarding.
+        </div>
+
+        <ul class="vol-toc">
+          <li>Vertical Medicum — patient-facing</li>
+          <li>Vertical Hospitalitatis — multi-property</li>
+          <li>Vertical Pharmaceuticum — inventory pipeline</li>
+          <li>Vertical SaaS B2B — cohort founders</li>
+        </ul>
+
+        <div class="vol-cta">
+          <span class="vol-cta-text">Aperire Volumen</span>
+          <span class="vol-cta-arrow">→</span>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -686,5 +731,6 @@ h2 {
 
 </div>
 
+<script src="/search.js" defer></script>
 </body>
 </html>

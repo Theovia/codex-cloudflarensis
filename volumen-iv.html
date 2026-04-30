@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Verticalibus Cloudflarensibus · Codex Volumen IV</title>
+<meta name="description" content="Volumen IV del Codex Cloudflarensis: playbooks por vertical (medical, hospitality, pharma, B2B SaaS) con arquitectura específica y cost projection.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="Vol IV · De Verticalibus · Codex Cloudflarensis">
+<meta property="og:description" content="Playbooks por vertical: Medical, Hospitality, Pharma, B2B SaaS. Arquitectura específica + cost projection + tenants→primitivas.">
+<meta property="og:image" content="https://codex.eigenatlas.com/og.png">
+<meta property="og:url" content="https://codex.eigenatlas.com/volumen-iv.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://codex.eigenatlas.com/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+:root {
+  --parchment: #f1e4c4; --parchment-light: #f9efd1; --parchment-dark: #e6d4a8; --parchment-shadow: #c9b685;
+  --ink: #1a0f05; --ink-soft: #3d2a18; --ink-faded: #6b5236;
+  --gold-2: #d4a843; --gold-3: #f5d574; --gold-4: #fdf2c4; --gold-deep: #8b6914;
+  --crimson: #8b1a1a; --crimson-deep: #5e0f0f; --vermillion: #c0392b;
+  --lapis: #1e3a8a; --lapis-deep: #0d1f5c; --azurite: #2a5298;
+  --verdigris: #4a7c59; --malachite: #2d5a3d;
+  --violet: #6b2d99; --violet-deep: #4a1d6e; --amethyst: #8e44c5;
+  --vellum-rule: rgba(26, 15, 5, 0.15);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--parchment); color: var(--ink);
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  font-size: 19px; line-height: 1.6; min-height: 100vh; position: relative; overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 105, 20, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.28   0 0 0 0 0.1   0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: cover, cover, 400px 400px; background-attachment: fixed;
+}
+body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 15, 5, 0.18) 100%); pointer-events: none; z-index: 1; }
+
+.nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(241, 228, 196, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #8b6914; padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+.nav-bar a { color: #3d2a18; text-decoration: none; padding: 4px 12px; border-bottom: 1px solid transparent; transition: all 0.3s; }
+.nav-bar a:hover { color: #8b1a1a; border-bottom-color: #8b6914; }
+.nav-bar .nav-current { color: #8b1a1a; font-weight: 700; }
+.nav-bar .nav-home { font-family: 'EB Garamond', serif; font-style: italic; letter-spacing: 0.2em; }
+
+.codex { max-width: 1240px; margin: 0 auto; padding: 100px 48px 120px; position: relative; z-index: 2; }
+
+.hero { text-align: center; padding: 60px 0 100px; }
+.hero-frame { width: 100%; max-width: 980px; margin: 0 auto; position: relative; padding: 80px 64px; }
+.ornament-corner { position: absolute; width: 90px; height: 90px; pointer-events: none; }
+.ornament-corner.tl { top: 0; left: 0; }
+.ornament-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner.br { bottom: 0; right: 0; transform: scale(-1); }
+
+.eyebrow-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.3em; color: var(--ink-faded); text-transform: uppercase; margin-bottom: 28px; }
+.hero-rule { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-deep), transparent); margin: 0 auto 32px; }
+h1.codex-title { font-family: 'Cinzel Decorative', 'Cinzel', serif; font-weight: 900; font-size: clamp(40px, 6vw, 76px); line-height: 1.05; letter-spacing: 0.02em; color: var(--ink); margin-bottom: 24px; text-transform: uppercase; text-align: center; }
+h1.codex-title .gilt { display: inline-block; font-size: 0.78em; letter-spacing: 0.01em; background: linear-gradient(180deg, var(--gold-3) 0%, var(--gold-2) 30%, var(--gold-deep) 70%, var(--gold-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)); animation: shimmer 6s ease-in-out infinite; }
+@keyframes shimmer { 0%, 100% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.4)) brightness(1); } 50% { filter: drop-shadow(0 1px 0 rgba(139, 105, 20, 0.7)) brightness(1.15); } }
+.hero-subtitle { font-family: 'Cinzel', serif; font-weight: 500; font-size: 22px; letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; margin-bottom: 40px; }
+.hero-lede { font-family: 'Cormorant Garamond', serif; font-size: 22px; line-height: 1.65; font-weight: 400; color: var(--ink-soft); max-width: 640px; margin: 0 auto; font-style: italic; }
+.hero-lede strong { font-style: normal; font-weight: 600; color: var(--crimson); }
+.toc { margin-top: 56px; display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+.toc a { color: var(--ink-faded); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.3s, border-color 0.3s; }
+.toc a:hover { color: var(--crimson); border-bottom-color: var(--gold-deep); }
+
+.section-divider { width: 100%; text-align: center; margin: 80px 0 60px; }
+.section-divider svg { display: inline-block; width: 280px; height: 36px; }
+
+.section { margin-bottom: 100px; }
+.section-head { text-align: center; margin-bottom: 60px; }
+.section-num { font-family: 'Cinzel Decorative', serif; font-size: 60px; font-weight: 900; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.08em; margin-bottom: 8px; filter: drop-shadow(0 2px 0 rgba(139, 105, 20, 0.3)); }
+h2.section-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(28px, 4vw, 42px); letter-spacing: 0.04em; color: var(--ink); text-transform: uppercase; margin-bottom: 16px; }
+.section-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; color: var(--crimson); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+.section-sub { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--ink-soft); max-width: 660px; margin: 0 auto; line-height: 1.6; }
+
+/* VERTICAL CARD */
+.vertical {
+  position: relative;
+  background: linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-shadow);
+  padding: 56px 64px;
+  margin-bottom: 48px;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset, 0 24px 48px -24px rgba(26, 15, 5, 0.3);
+}
+.vertical-corner { position: absolute; width: 60px; height: 60px; pointer-events: none; z-index: 2; }
+.vertical-corner.tl { top: 12px; left: 12px; }
+.vertical-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+.vertical-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+.vertical-corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+.vertical-head { text-align: center; margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px dotted var(--vellum-rule); }
+.vertical-num { font-family: 'Cinzel Decorative', serif; font-size: 42px; font-weight: 900; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+.vertical-icon { display: inline-block; width: 100px; height: 100px; margin-bottom: 16px; border: 3px solid var(--gold-deep); border-radius: 4px; box-shadow: 0 0 0 2px var(--parchment) inset, 0 0 0 3px var(--gold-2) inset; display: flex; align-items: center; justify-content: center; }
+.vertical-icon-wrap { display: flex; justify-content: center; margin-bottom: 16px; }
+.vertical-icon span { font-family: 'UnifrakturMaguntia', serif; font-size: 60px; line-height: 1; background: linear-gradient(180deg, var(--gold-4), var(--gold-2) 60%, var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
+.vertical-icon.medical { background: linear-gradient(135deg, var(--crimson-deep), var(--vermillion)); }
+.vertical-icon.hospitality { background: linear-gradient(135deg, var(--lapis-deep), var(--azurite)); }
+.vertical-icon.pharma { background: linear-gradient(135deg, var(--malachite), var(--verdigris)); }
+.vertical-icon.b2b { background: linear-gradient(135deg, var(--violet-deep), var(--amethyst)); }
+
+.vertical-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--gold-deep); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.vertical-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 28px; letter-spacing: 0.05em; color: var(--ink); text-transform: uppercase; margin-bottom: 6px; }
+.vertical-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--ink-faded); }
+
+.block-label { font-family: 'Cinzel', serif; font-weight: 600; font-size: 11px; letter-spacing: 0.25em; color: var(--crimson); text-transform: uppercase; margin: 24px 0 12px; display: flex; align-items: center; gap: 12px; }
+.block-label::before, .block-label::after { content: ''; height: 1px; flex: 0 0 24px; background: var(--crimson); opacity: 0.3; }
+.block-label::before { flex: 0 0 12px; }
+.block-label::after { flex: 1 1 auto; }
+
+.vertical-body { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.7; color: var(--ink-soft); }
+.vertical-body p { margin-bottom: 12px; }
+.vertical-body strong { color: var(--ink); font-weight: 700; }
+.vertical-body code { font-family: 'SF Mono', monospace; font-size: 14px; background: rgba(139, 26, 26, 0.08); padding: 2px 6px; border-radius: 2px; color: var(--crimson-deep); }
+
+/* PRIMITIVES MAPPING */
+.prim-map { display: grid; gap: 8px; margin-top: 12px; }
+.pm-row { display: grid; grid-template-columns: 200px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px dotted var(--vellum-rule); align-items: baseline; }
+.pm-row:last-child { border: none; }
+.pm-prim { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); font-weight: 700; }
+.pm-purpose { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--ink-soft); line-height: 1.5; }
+
+/* COST PROJECTION */
+.projection { background: rgba(255, 248, 220, 0.5); border-left: 3px solid var(--gold-deep); padding: 18px 24px; margin-top: 16px; }
+.projection-title { font-family: 'Cinzel', serif; font-weight: 600; font-size: 12px; letter-spacing: 0.18em; color: var(--crimson); text-transform: uppercase; margin-bottom: 12px; }
+.proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.proj-item { display: flex; flex-direction: column; }
+.proj-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--ink-faded); }
+.proj-value { font-family: 'Cinzel Decorative', serif; font-size: 22px; font-weight: 900; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* DIAGRAM */
+.vert-diagram { width: 100%; margin: 24px 0; padding: 16px; background: linear-gradient(135deg, rgba(212, 168, 67, 0.06), rgba(13, 31, 92, 0.04)); border: 2px solid var(--gold-deep); box-shadow: 0 0 0 1px var(--parchment) inset, 0 0 0 2px var(--gold-2) inset; aspect-ratio: 16 / 9; }
+.vert-diagram svg { width: 100%; height: 100%; }
+.dg-node-bg { fill: var(--parchment-light); stroke: var(--gold-deep); stroke-width: 1.5; }
+.dg-arrow { fill: none; stroke: var(--gold-deep); stroke-width: 1.5; opacity: 0.7; }
+.dg-arrow-bold { fill: none; stroke: var(--crimson); stroke-width: 2; opacity: 0.9; }
+.dg-flow { stroke-dasharray: 6 4; animation: flow 3s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -20; } }
+.dg-label { font-family: 'Cinzel', serif; font-weight: 700; font-size: 10px; fill: var(--ink); text-anchor: middle; letter-spacing: 0.05em; }
+.dg-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 9px; fill: var(--gold-deep); text-anchor: middle; }
+.dg-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px; fill: var(--ink-soft); text-anchor: middle; }
+
+/* PLAYBOOK */
+.playbook { display: grid; gap: 12px; margin-top: 16px; }
+.pb-step { display: grid; grid-template-columns: 36px 1fr; gap: 18px; align-items: baseline; padding: 8px 0; border-bottom: 1px dotted var(--vellum-rule); }
+.pb-step:last-child { border: none; }
+.pb-num { font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 22px; color: var(--gold-deep); text-align: center; }
+.pb-body { font-family: 'Cormorant Garamond', serif; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+.pb-body strong { color: var(--ink); font-weight: 700; }
+
+/* CROSS LINK */
+.cross-link { margin-top: 20px; padding-top: 16px; border-top: 1px dotted var(--vellum-rule); font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--gold-deep); }
+.cross-link a { color: var(--crimson); text-decoration: none; border-bottom: 1px dotted var(--crimson); }
+.cross-link a:hover { color: var(--crimson-deep); border-bottom-style: solid; }
+
+/* EPILOGUE */
+.epilogue { background: linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(139, 26, 26, 0.05) 100%), linear-gradient(180deg, var(--parchment-light) 0%, var(--parchment) 100%); border: 1px solid var(--parchment-shadow); padding: 56px 64px; box-shadow: 0 0 0 1px var(--gold-deep) inset, 0 0 0 4px var(--parchment) inset, 0 0 0 5px var(--gold-deep) inset, 0 24px 48px -24px rgba(26, 15, 5, 0.3); text-align: center; }
+.epilogue-mark { font-family: 'Cinzel Decorative', serif; font-size: 72px; background: linear-gradient(180deg, var(--gold-3), var(--gold-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; line-height: 1; }
+.epilogue-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; margin-bottom: 8px; }
+.epilogue-latin { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; color: var(--crimson); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 28px; }
+.epilogue p { font-family: 'Cormorant Garamond', serif; font-size: 21px; line-height: 1.7; color: var(--ink-soft); max-width: 720px; margin: 0 auto 18px; }
+.epilogue p strong { font-weight: 700; color: var(--crimson); }
+.epilogue p:first-of-type::first-letter { font-family: 'Cinzel Decorative', serif; font-weight: 900; font-size: 42px; color: var(--gold-deep); float: left; line-height: 0.9; margin-right: 8px; margin-top: 4px; }
+.colophon { text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--vellum-rule); }
+.colophon-mark { font-family: 'Cinzel Decorative', serif; font-size: 32px; color: var(--gold-deep); margin-bottom: 16px; }
+.colophon-text { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: var(--ink-faded); letter-spacing: 0.15em; text-transform: uppercase; }
+
+@media (max-width: 800px) { .codex { padding: 100px 20px 80px; } .hero-frame, .vertical, .epilogue { padding: 40px 24px; } .pm-row, .proj-grid { grid-template-columns: 1fr; } .nav-bar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; font-size: 9px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn-corner" viewBox="0 0 90 90">
+      <g fill="none" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 4,4 L 86,4 L 86,16 L 16,16 L 16,86 L 4,86 Z" fill="#d4a843" fill-opacity="0.15"/>
+        <path d="M 18,18 Q 30,20 36,32 Q 38,42 32,52 Q 22,58 18,52 M 18,18 Q 26,32 18,42 M 32,28 Q 42,22 50,28 Q 58,38 50,46 Q 42,52 36,48"/>
+        <circle cx="22" cy="22" r="2" fill="#8b1a1a"/>
+        <circle cx="38" cy="36" r="1.5" fill="#1e3a8a"/>
+        <path d="M 42,12 Q 50,8 58,12 M 50,12 L 50,4 M 12,42 Q 8,50 12,58 M 12,50 L 4,50"/>
+      </g>
+    </symbol>
+    <symbol id="orn-small" viewBox="0 0 60 60">
+      <g fill="none" stroke="#8b6914" stroke-width="1" stroke-linecap="round">
+        <path d="M 8,8 Q 18,10 22,20 Q 24,28 18,34 M 8,8 Q 14,18 8,26 M 22,16 Q 30,12 36,18"/>
+        <circle cx="12" cy="12" r="1.5" fill="#8b1a1a"/>
+        <circle cx="24" cy="24" r="1" fill="#1e3a8a"/>
+      </g>
+    </symbol>
+    <symbol id="divider" viewBox="0 0 280 36">
+      <g fill="none" stroke="#8b6914" stroke-width="1.2" stroke-linecap="round">
+        <path d="M 4,18 L 30,18 M 30,18 L 30,10 L 38,10 L 38,26 L 22,26 L 22,14 L 50,14 L 50,22 L 60,22"/>
+        <path d="M 220,22 L 230,22 L 230,14 L 258,14 L 258,26 L 242,26 L 242,10 L 250,10 L 250,18 L 276,18"/>
+        <circle cx="140" cy="18" r="12" stroke="#8b1a1a" stroke-width="1.2" fill="#fdf2c4"/>
+        <circle cx="140" cy="18" r="6" fill="#8b6914"/>
+        <circle cx="140" cy="18" r="2" fill="#fdf2c4"/>
+        <g stroke="#8b6914">
+          <line x1="140" y1="2" x2="140" y2="8"/><line x1="140" y1="28" x2="140" y2="34"/>
+          <line x1="124" y1="18" x2="118" y2="18"/><line x1="156" y1="18" x2="162" y2="18"/>
+          <line x1="129" y1="7" x2="125" y2="3"/><line x1="151" y1="7" x2="155" y2="3"/>
+          <line x1="129" y1="29" x2="125" y2="33"/><line x1="151" y1="29" x2="155" y2="33"/>
+        </g>
+        <line x1="60" y1="18" x2="120" y2="18" stroke-dasharray="2,3"/>
+        <line x1="160" y1="18" x2="220" y2="18" stroke-dasharray="2,3"/>
+      </g>
+    </symbol>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b6914"/>
+    </marker>
+  </defs>
+</svg>
+
+<nav class="nav-bar">
+  <a href="index.html" class="nav-home">❦ Bibliotheca</a>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a href="volumen-i.html">Vol I · Primitivae</a>
+    <a href="volumen-ii.html">Vol II · Architectura</a>
+    <a href="volumen-iii.html">Vol III · Operationes</a>
+    <a href="volumen-iv.html" class="nav-current">Vol IV · Verticales</a>
+  </div>
+</nav>
+
+<div class="codex">
+
+  <section class="hero">
+    <div class="hero-frame">
+      <svg class="ornament-corner tl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner tr"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner bl"><use href="#orn-corner"/></svg>
+      <svg class="ornament-corner br"><use href="#orn-corner"/></svg>
+      <div class="eyebrow-latin">Codex Cloudflarensis · Volumen IV · Folio I</div>
+      <div class="hero-rule"></div>
+      <h1 class="codex-title">De<br><span class="gilt">Verticalibus</span></h1>
+      <div class="hero-subtitle">Playbooks · Architecturae · Pretia</div>
+      <p class="hero-lede">
+        Las primitivas son universales. La arquitectura es general. La <strong>operación se concreta en el vertical</strong>. Este volumen aplica los tres anteriores a cuatro verticales reales — medical, hospitality, pharma, B2B SaaS — con su arquitectura específica, su mapping primitiva-función, y su proyección de costos.
+      </p>
+      <nav class="toc">
+        <a href="#medical">I · Medical</a>
+        <a href="#hospitality">II · Hospitality</a>
+        <a href="#pharma">III · Pharma</a>
+        <a href="#b2b-saas">IV · B2B SaaS</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- ============ MEDICAL ============ -->
+  <article class="vertical" id="medical">
+    <svg class="vertical-corner tl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner tr"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner bl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner br"><use href="#orn-small"/></svg>
+
+    <div class="vertical-head">
+      <div class="vertical-num">I</div>
+      <div class="vertical-icon-wrap"><div class="vertical-icon medical"><span>☩</span></div></div>
+      <div class="vertical-latin">— Vertical Medicum —</div>
+      <div class="vertical-title">Medical · Patient-Facing</div>
+      <div class="vertical-tag">Cirujanos · Especialistas · Clínicas privadas</div>
+    </div>
+
+    <div class="vertical-body">
+      <p>Médicos privados con consulta de alto valor ($500-$5K USD/consulta). Necesidad: <strong>captura digital de leads + cualificación inteligente + booking automatizado</strong>. Tolerancia a downtime: cero — un paciente que no encuentra cómo agendar va a la competencia en 30 segundos.</p>
+
+      <div class="block-label">Arquitectura</div>
+      <div class="vert-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="200" r="22" class="dg-node-bg"/>
+          <text x="60" y="198" class="dg-label">PACIENTE</text>
+          <text x="60" y="212" class="dg-latin">Aegrotus</text>
+
+          <rect x="140" y="80" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="190" y="100" class="dg-label">LANDING</text>
+          <text x="190" y="115" class="dg-latin">CF Pages</text>
+
+          <rect x="140" y="170" width="100" height="60" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="190" y="195" class="dg-label">CHATBOT</text>
+          <text x="190" y="210" class="dg-latin">DO + LLM</text>
+
+          <rect x="140" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="190" y="290" class="dg-label">WHATSAPP</text>
+          <text x="190" y="305" class="dg-latin">ManyChat</text>
+
+          <rect x="300" y="170" width="100" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="350" y="195" class="dg-label">WORKER</text>
+          <text x="350" y="210" class="dg-latin">api orchestrator</text>
+
+          <rect x="460" y="60" width="100" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="510" y="80" class="dg-label">VECTORIZE</text>
+          <text x="510" y="95" class="dg-latin">protocols RAG</text>
+
+          <rect x="460" y="130" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="510" y="150" class="dg-label">AI GATEWAY</text>
+          <text x="510" y="165" class="dg-latin">Claude</text>
+
+          <rect x="460" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="510" y="220" class="dg-label">D1</text>
+          <text x="510" y="235" class="dg-latin">patients DB</text>
+
+          <rect x="460" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="510" y="290" class="dg-label">CALENDAR</text>
+          <text x="510" y="305" class="dg-latin">Google API</text>
+
+          <rect x="460" y="340" width="100" height="40" rx="6" class="dg-node-bg" fill="#f4d8d8"/>
+          <text x="510" y="358" class="dg-label">STRIPE</text>
+          <text x="510" y="372" class="dg-latin">deposits</text>
+
+          <rect x="620" y="170" width="100" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="670" y="195" class="dg-label">DOCTOR</text>
+          <text x="670" y="210" class="dg-latin">Dashboard</text>
+
+          <path d="M 82 200 Q 110 130 138 105" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 82 200 L 138 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 82 200 Q 110 270 138 295" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 240 200 L 296 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 195 Q 430 130 456 100" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 200 L 456 155" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 200 L 456 220" class="dg-arrow-bold" marker-end="url(#arrow)"/>
+          <path d="M 400 210 L 456 290" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 220 Q 430 290 456 360" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 560 220 L 616 200" class="dg-arrow" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+
+      <div class="block-label">Mapping Primitiva → Función</div>
+      <div class="prim-map">
+        <div class="pm-row"><div class="pm-prim">Pages</div><div class="pm-purpose">Landing pública con formulario captación + Meta Pixel</div></div>
+        <div class="pm-row"><div class="pm-prim">Worker (api)</div><div class="pm-purpose">Orquestador: recibe webhooks, valida, rutea a chatbot/calendar/Stripe</div></div>
+        <div class="pm-row"><div class="pm-prim">Durable Object</div><div class="pm-purpose">Conversación per paciente (single-writer per <code>chat_id</code>) — historial, contexto, estado</div></div>
+        <div class="pm-row"><div class="pm-prim">D1</div><div class="pm-purpose">Patient records, citas, historial médico (relacional, queries cruzadas)</div></div>
+        <div class="pm-row"><div class="pm-prim">Vectorize</div><div class="pm-purpose">RAG sobre protocolos médicos — chatbot responde con base de conocimiento del doctor</div></div>
+        <div class="pm-row"><div class="pm-prim">AI Gateway</div><div class="pm-purpose">Proxy Claude/GPT con cache (40% hit en preguntas FAQ) + observabilidad</div></div>
+        <div class="pm-row"><div class="pm-prim">Workflow</div><div class="pm-purpose">Saga booking: validar safety → check calendar → reservar → cobrar deposit → confirmar email</div></div>
+        <div class="pm-row"><div class="pm-prim">Email Workers</div><div class="pm-purpose">Confirmaciones, recordatorios, follow-ups post-consulta</div></div>
+        <div class="pm-row"><div class="pm-prim">Queue</div><div class="pm-purpose">Async: SMS recordatorios, sync a Sheets del doctor, exports a contabilidad</div></div>
+      </div>
+
+      <div class="block-label">Playbook de Onboarding</div>
+      <div class="playbook">
+        <div class="pb-step"><div class="pb-num">I</div><div class="pb-body"><strong>Día 1-3</strong>: Diagnóstico clínico — entender flujo actual del doctor, pacientes target, objeciones comunes, protocolos. Capturar tono de marca.</div></div>
+        <div class="pb-step"><div class="pb-num">II</div><div class="pb-body"><strong>Día 4-7</strong>: Landing + chatbot configurado. Vectorize indexea FAQs/protocolos. Calendar OAuth setup. Stripe configurado.</div></div>
+        <div class="pb-step"><div class="pb-num">III</div><div class="pb-body"><strong>Día 8-12</strong>: Testing adversarial del chatbot — edge cases (menores, alergias, cirugías previas), drift, post-processors. Production audit antes de deploy.</div></div>
+        <div class="pb-step"><div class="pb-num">IV</div><div class="pb-body"><strong>Día 13-15</strong>: Soft launch con tráfico Meta Ads controlado. Monitorear KPIs (lead → cita, no-show rate, conversión). Iterar prompts.</div></div>
+        <div class="pb-step"><div class="pb-num">V</div><div class="pb-body"><strong>Día 16+</strong>: Escalar ads. Agregar verticales (Messenger → WhatsApp continuity). Reporting mensual al doctor.</div></div>
+      </div>
+
+      <div class="projection">
+        <div class="projection-title">Proyección Financiera · 1 doctor activo</div>
+        <div class="proj-grid">
+          <div class="proj-item"><div class="proj-label">CF infrastructure cost</div><div class="proj-value">~$25/mes</div></div>
+          <div class="proj-item"><div class="proj-label">LLM tokens (40% cache)</div><div class="proj-value">~$80/mes</div></div>
+          <div class="proj-item"><div class="proj-label">Setup fee Eigen</div><div class="proj-value">$30K MXN</div></div>
+          <div class="proj-item"><div class="proj-label">MRR Eigen</div><div class="proj-value">$20K MXN</div></div>
+        </div>
+      </div>
+
+      <div class="cross-link">→ <a href="volumen-ii.html#pars-i">Vol II · Pattern III (Saga)</a> · <a href="volumen-ii.html#pars-i">Pattern VIII (AI Orchestration)</a> · <a href="volumen-iii.html#pars-iii">Vol III · Observability</a></div>
+    </div>
+  </article>
+
+  <!-- ============ HOSPITALITY ============ -->
+  <article class="vertical" id="hospitality">
+    <svg class="vertical-corner tl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner tr"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner bl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner br"><use href="#orn-small"/></svg>
+
+    <div class="vertical-head">
+      <div class="vertical-num">II</div>
+      <div class="vertical-icon-wrap"><div class="vertical-icon hospitality"><span>⌂</span></div></div>
+      <div class="vertical-latin">— Vertical Hospitalitatis —</div>
+      <div class="vertical-title">Hospitality · Multi-Property</div>
+      <div class="vertical-tag">Hoteles boutique · Cadenas pequeñas · Resorts</div>
+    </div>
+
+    <div class="vertical-body">
+      <p>Hoteles independientes o cadenas chicas (2-50 propiedades). Necesidad: <strong>booking unified + revenue management + guest experience digital + multi-tenant</strong>. Cada propiedad mantiene identidad pero comparte infraestructura.</p>
+
+      <div class="block-label">Arquitectura</div>
+      <div class="vert-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="100" r="20" class="dg-node-bg"/>
+          <text x="60" y="100" class="dg-label">GUEST</text>
+
+          <circle cx="60" cy="200" r="20" class="dg-node-bg"/>
+          <text x="60" y="200" class="dg-label">OTA</text>
+
+          <circle cx="60" cy="300" r="20" class="dg-node-bg"/>
+          <text x="60" y="300" class="dg-label">STAFF</text>
+
+          <rect x="140" y="170" width="100" height="60" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="190" y="195" class="dg-label">WORKER</text>
+          <text x="190" y="210" class="dg-latin">edge router</text>
+
+          <rect x="300" y="40" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="350" y="60" class="dg-label">DO #hotel-A</text>
+          <text x="350" y="75" class="dg-latin">tenant A</text>
+
+          <rect x="300" y="105" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="350" y="125" class="dg-label">DO #hotel-B</text>
+          <text x="350" y="140" class="dg-latin">tenant B</text>
+
+          <rect x="300" y="170" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="350" y="190" class="dg-label">DO #hotel-C</text>
+          <text x="350" y="205" class="dg-latin">tenant C</text>
+
+          <rect x="300" y="235" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="350" y="255" class="dg-label">DO #hotel-D</text>
+          <text x="350" y="270" class="dg-latin">tenant D</text>
+
+          <rect x="460" y="60" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="510" y="80" class="dg-label">D1 SHARED</text>
+          <text x="510" y="95" class="dg-latin">analytics</text>
+
+          <rect x="460" y="130" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="510" y="150" class="dg-label">KV</text>
+          <text x="510" y="165" class="dg-latin">rates cache</text>
+
+          <rect x="460" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="510" y="220" class="dg-label">QUEUE</text>
+          <text x="510" y="235" class="dg-latin">OTA sync</text>
+
+          <rect x="460" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#3d2a18" stroke="#d4a843"/>
+          <text x="510" y="290" class="dg-label" fill="#fdf2c4">WORKFLOW</text>
+          <text x="510" y="305" class="dg-latin" fill="#d4a843">revenue mgmt</text>
+
+          <rect x="620" y="100" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8d8"/>
+          <text x="670" y="120" class="dg-label">STRIPE</text>
+          <text x="670" y="135" class="dg-latin">prepayment</text>
+
+          <rect x="620" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="670" y="220" class="dg-label">SMS / WA</text>
+          <text x="670" y="235" class="dg-latin">guest comm</text>
+
+          <path d="M 80 100 Q 110 140 138 175" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 80 200 L 138 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 80 300 Q 110 260 138 225" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 240 185 Q 270 95 296 65" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 240 195 L 296 130" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 240 205 L 296 195" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 240 215 Q 270 245 296 260" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 400 130 L 456 90" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 195 L 456 155" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 260 L 456 225" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 400 260 L 456 295" class="dg-arrow-bold" marker-end="url(#arrow)"/>
+          <path d="M 560 90 L 616 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 560 220 L 616 220" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+
+      <div class="block-label">Mapping Primitiva → Función</div>
+      <div class="prim-map">
+        <div class="pm-row"><div class="pm-prim">DO per Hotel</div><div class="pm-purpose"><strong>Single-writer per propiedad</strong>: inventory rooms, current rates, availability — sin race conditions entre OTAs</div></div>
+        <div class="pm-row"><div class="pm-prim">Worker (router)</div><div class="pm-purpose">Edge router que extrae <code>hotel_id</code> del request → dispatch a DO correcto</div></div>
+        <div class="pm-row"><div class="pm-prim">D1 Shared</div><div class="pm-purpose">Analytics cross-property: occupancy rates, revenue per available room (RevPAR), seasonal patterns</div></div>
+        <div class="pm-row"><div class="pm-prim">KV</div><div class="pm-purpose">Rates cache global — guest browse hotel = read rate sin tocar DO (read-heavy)</div></div>
+        <div class="pm-row"><div class="pm-prim">Queue</div><div class="pm-purpose">OTA sync async: Booking.com, Expedia, Airbnb. Push rates + availability batches.</div></div>
+        <div class="pm-row"><div class="pm-prim">Workflow</div><div class="pm-purpose">Revenue management automatizado: dynamic pricing diaria basada en demand signals, competitor rates</div></div>
+        <div class="pm-row"><div class="pm-prim">Stripe</div><div class="pm-purpose">Prepayment, deposits, no-show charges. Stripe Connect si quieres marketplace de hotels.</div></div>
+        <div class="pm-row"><div class="pm-prim">Email + SMS</div><div class="pm-purpose">Pre-arrival info, check-in instructions, satisfaction surveys</div></div>
+      </div>
+
+      <div class="block-label">Playbook de Onboarding</div>
+      <div class="playbook">
+        <div class="pb-step"><div class="pb-num">I</div><div class="pb-body"><strong>Semana 1</strong>: Diagnóstico stack actual (cuál PMS, channel manager, payment processor). Mapear datos a migrar.</div></div>
+        <div class="pb-step"><div class="pb-num">II</div><div class="pb-body"><strong>Semana 2</strong>: Schema D1 (rooms, rates, bookings, guests). DO class implementation. Worker bindings.</div></div>
+        <div class="pb-step"><div class="pb-num">III</div><div class="pb-body"><strong>Semana 3</strong>: OTA integrations (Booking, Expedia APIs). Queue consumers. Stripe setup. Frontend booking engine.</div></div>
+        <div class="pb-step"><div class="pb-num">IV</div><div class="pb-body"><strong>Semana 4</strong>: Migration data piloto (1 hotel). Dual-write con sistema viejo. Verificar consistency.</div></div>
+        <div class="pb-step"><div class="pb-num">V</div><div class="pb-body"><strong>Semana 5+</strong>: Roll out resto propiedades. Workflow revenue mgmt activo. Reporting dashboard.</div></div>
+      </div>
+
+      <div class="projection">
+        <div class="projection-title">Proyección Financiera · 8 propiedades</div>
+        <div class="proj-grid">
+          <div class="proj-item"><div class="proj-label">CF infrastructure cost</div><div class="proj-value">~$80/mes</div></div>
+          <div class="proj-item"><div class="proj-label">Stripe fees (2.9%)</div><div class="proj-value">passthrough</div></div>
+          <div class="proj-item"><div class="proj-label">Deal value (Cosalá pattern)</div><div class="proj-value">$4M MXN</div></div>
+          <div class="proj-item"><div class="proj-label">Setup + 12mo MRR</div><div class="proj-value">12-18 mo</div></div>
+        </div>
+      </div>
+
+      <div class="cross-link">→ <a href="volumen-ii.html#pars-i">Vol II · Pattern VII (Multi-Tenant)</a> · <a href="volumen-iii.html#pars-iv">Vol III · Migration playbooks</a></div>
+    </div>
+  </article>
+
+  <!-- ============ PHARMA ============ -->
+  <article class="vertical" id="pharma">
+    <svg class="vertical-corner tl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner tr"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner bl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner br"><use href="#orn-small"/></svg>
+
+    <div class="vertical-head">
+      <div class="vertical-num">III</div>
+      <div class="vertical-icon-wrap"><div class="vertical-icon pharma"><span>℞</span></div></div>
+      <div class="vertical-latin">— Vertical Pharmaceuticum —</div>
+      <div class="vertical-title">Pharma · Inventory Pipeline</div>
+      <div class="vertical-tag">Farmacias · Cadenas regionales · Distribuidoras</div>
+    </div>
+
+    <div class="vertical-body">
+      <p>Farmacias con inventario complejo: miles de SKUs, batches con expiry dates, múltiples ubicaciones físicas (mostrador, bodega), reabastecimiento urgente. Necesidad: <strong>data pipeline canonical + alerts proactivas + integración con sistemas legacy (Excel, ERP viejo)</strong>.</p>
+
+      <div class="block-label">Arquitectura</div>
+      <div class="vert-diagram">
+        <svg viewBox="0 0 800 400">
+          <rect x="20" y="60" width="100" height="50" rx="6" class="dg-node-bg" fill="#e6d4a8"/>
+          <text x="70" y="80" class="dg-label">EXCELS</text>
+          <text x="70" y="95" class="dg-latin">11 archivos</text>
+
+          <rect x="20" y="130" width="100" height="50" rx="6" class="dg-node-bg" fill="#e6d4a8"/>
+          <text x="70" y="150" class="dg-label">PSM ERP</text>
+          <text x="70" y="165" class="dg-latin">legacy</text>
+
+          <rect x="20" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="70" y="220" class="dg-label">POS</text>
+          <text x="70" y="235" class="dg-latin">tickets</text>
+
+          <rect x="20" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="70" y="290" class="dg-label">TELEGRAM</text>
+          <text x="70" y="305" class="dg-latin">staff bot</text>
+
+          <rect x="180" y="160" width="100" height="60" rx="6" class="dg-node-bg" fill="#3d2a18" stroke="#d4a843"/>
+          <text x="230" y="185" class="dg-label" fill="#fdf2c4">WORKFLOW</text>
+          <text x="230" y="200" class="dg-latin" fill="#d4a843">ingestion</text>
+
+          <rect x="320" y="60" width="100" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="370" y="80" class="dg-label">D1</text>
+          <text x="370" y="95" class="dg-latin">canonical</text>
+
+          <rect x="320" y="130" width="100" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="370" y="150" class="dg-label">D1</text>
+          <text x="370" y="165" class="dg-latin">stock movements</text>
+
+          <rect x="320" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="370" y="220" class="dg-label">KV</text>
+          <text x="370" y="235" class="dg-latin">stock cache</text>
+
+          <rect x="320" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="370" y="290" class="dg-label">SUPABASE</text>
+          <text x="370" y="305" class="dg-latin">analytics</text>
+
+          <rect x="460" y="60" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="510" y="80" class="dg-label">QUEUE</text>
+          <text x="510" y="95" class="dg-latin">expiry alerts</text>
+
+          <rect x="460" y="130" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8f4e0"/>
+          <text x="510" y="150" class="dg-label">QUEUE</text>
+          <text x="510" y="165" class="dg-latin">reorder</text>
+
+          <rect x="460" y="200" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="510" y="220" class="dg-label">DO</text>
+          <text x="510" y="235" class="dg-latin">SKU state</text>
+
+          <rect x="460" y="270" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="510" y="290" class="dg-label">SENTRY</text>
+          <text x="510" y="305" class="dg-latin">errors</text>
+
+          <rect x="620" y="100" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="680" y="120" class="dg-label">PHARMACIST</text>
+          <text x="680" y="135" class="dg-latin">Telegram alerts</text>
+
+          <rect x="620" y="200" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="680" y="220" class="dg-label">DASHBOARD</text>
+          <text x="680" y="235" class="dg-latin">PostHog</text>
+
+          <path d="M 120 85 L 176 175" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 120 155 L 176 185" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 120 225 L 176 195" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 120 295 L 176 215" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 280 175 L 316 90" class="dg-arrow-bold" marker-end="url(#arrow)"/>
+          <path d="M 280 185 L 316 155" class="dg-arrow-bold" marker-end="url(#arrow)"/>
+          <path d="M 280 195 L 316 225" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 280 210 L 316 295" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 420 90 L 456 85" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 420 155 L 456 155" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 420 225 L 456 225" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 560 85 Q 590 105 616 120" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 560 155 L 616 130" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 420 295 L 616 230" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+
+      <div class="block-label">Mapping Primitiva → Función</div>
+      <div class="prim-map">
+        <div class="pm-row"><div class="pm-prim">Workflow</div><div class="pm-purpose">Pipeline de ingesta: parse Excels (11 canonical) + match con PSM ERP + reconcile + apply a D1. Steps idempotentes para replay.</div></div>
+        <div class="pm-row"><div class="pm-prim">D1</div><div class="pm-purpose">Canonical SKU table + stock_movements (event sourcing) + batch tracking con expiry</div></div>
+        <div class="pm-row"><div class="pm-prim">DO per SKU</div><div class="pm-purpose">Para SKUs hot (alta rotación): single-writer per producto evita race conditions en multi-channel sales (mostrador + delivery)</div></div>
+        <div class="pm-row"><div class="pm-prim">KV</div><div class="pm-purpose">Stock cache para queries rápidas del POS — evita pegar D1 en cada venta</div></div>
+        <div class="pm-row"><div class="pm-prim">Queue (expiry)</div><div class="pm-purpose">Cron diario detecta SKUs próximos a expirar → notifica farmacéuticos vía Telegram</div></div>
+        <div class="pm-row"><div class="pm-prim">Queue (reorder)</div><div class="pm-purpose">Stock bajo umbral → auto-genera orden de compra → email a distribuidor</div></div>
+        <div class="pm-row"><div class="pm-prim">Email Workers</div><div class="pm-purpose">Recibe órdenes de distribuidor (CSVs adjuntos), parsea, actualiza expected stock</div></div>
+        <div class="pm-row"><div class="pm-prim">Sentry / Analytics</div><div class="pm-purpose">Observability crítica — pipeline de datos no puede fallar silenciosamente</div></div>
+      </div>
+
+      <div class="block-label">Playbook de Onboarding</div>
+      <div class="playbook">
+        <div class="pb-step"><div class="pb-num">I</div><div class="pb-body"><strong>Semana 1-2</strong>: Audit de datos legacy. Catalogar Excels canonical (en farmacia económica fueron 11). Mapear schema PSM ERP. Identificar inconsistencias (corrupted barcodes, dupes).</div></div>
+        <div class="pb-step"><div class="pb-num">II</div><div class="pb-body"><strong>Semana 3</strong>: Schema D1 canonical. Migration scripts con dry-run obligatorio. Match estructurado (no fuzzy) — tupla brand+dosis+presentación+lab.</div></div>
+        <div class="pb-step"><div class="pb-num">III</div><div class="pb-body"><strong>Semana 4</strong>: Workflow ingestion. POS integration. Telegram bot con alerts.</div></div>
+        <div class="pb-step"><div class="pb-num">IV</div><div class="pb-body"><strong>Semana 5</strong>: Backfill histórico. Sentry observability + alertas. Dashboard analytics.</div></div>
+        <div class="pb-step"><div class="pb-num">V</div><div class="pb-body"><strong>Semana 6+</strong>: Iterar reorder logic basada en demand patterns. Expiry optimization. Cross-store visibility (multi-sucursal).</div></div>
+      </div>
+
+      <div class="projection">
+        <div class="projection-title">Proyección Financiera · 1 farmacia activa</div>
+        <div class="proj-grid">
+          <div class="proj-item"><div class="proj-label">CF infrastructure</div><div class="proj-value">~$30/mes</div></div>
+          <div class="proj-item"><div class="proj-label">Supabase + analytics</div><div class="proj-value">~$25/mes</div></div>
+          <div class="proj-item"><div class="proj-label">Setup fee</div><div class="proj-value">$50K MXN</div></div>
+          <div class="proj-item"><div class="proj-label">MRR ongoing</div><div class="proj-value">$15K MXN</div></div>
+        </div>
+      </div>
+
+      <div class="cross-link">→ <a href="volumen-ii.html#pars-i">Vol II · Pattern VI (Event Sourcing)</a> · <a href="volumen-iii.html#pars-iii">Vol III · Observability</a></div>
+    </div>
+  </article>
+
+  <!-- ============ B2B SAAS ============ -->
+  <article class="vertical" id="b2b-saas">
+    <svg class="vertical-corner tl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner tr"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner bl"><use href="#orn-small"/></svg>
+    <svg class="vertical-corner br"><use href="#orn-small"/></svg>
+
+    <div class="vertical-head">
+      <div class="vertical-num">IV</div>
+      <div class="vertical-icon-wrap"><div class="vertical-icon b2b"><span>♛</span></div></div>
+      <div class="vertical-latin">— Vertical SaaS B2B —</div>
+      <div class="vertical-title">B2B SaaS · Cohort Founders</div>
+      <div class="vertical-tag">Eigenatlas pattern · Cirujanos · Profesionales</div>
+    </div>
+
+    <div class="vertical-body">
+      <p>Plataforma multi-tenant para profesionales independientes (cirujanos, contadores, abogados). Cada tenant paga MRR por su propia versión personalizada del producto. Necesidad: <strong>aislación absoluta + onboarding rápido + economics escalables</strong>.</p>
+
+      <div class="block-label">Arquitectura</div>
+      <div class="vert-diagram">
+        <svg viewBox="0 0 800 400">
+          <circle cx="60" cy="80" r="20" class="dg-node-bg"/>
+          <text x="60" y="80" class="dg-label">CIRUJANO A</text>
+
+          <circle cx="60" cy="160" r="20" class="dg-node-bg"/>
+          <text x="60" y="160" class="dg-label">CIRUJANO B</text>
+
+          <circle cx="60" cy="240" r="20" class="dg-node-bg"/>
+          <text x="60" y="240" class="dg-label">CIRUJANO C</text>
+
+          <circle cx="60" cy="320" r="20" class="dg-node-bg"/>
+          <text x="60" y="320" class="dg-label">+10 más</text>
+
+          <rect x="160" y="180" width="100" height="40" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="210" y="200" class="dg-label">ROUTER</text>
+          <text x="210" y="212" class="dg-latin">tenant ID</text>
+
+          <rect x="320" y="40" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="380" y="60" class="dg-label">DO #cirujano-A</text>
+          <text x="380" y="75" class="dg-latin">isolated state</text>
+
+          <rect x="320" y="110" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="380" y="130" class="dg-label">DO #cirujano-B</text>
+          <text x="380" y="145" class="dg-latin">isolated state</text>
+
+          <rect x="320" y="180" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="380" y="200" class="dg-label">DO #cirujano-C</text>
+          <text x="380" y="215" class="dg-latin">isolated state</text>
+
+          <rect x="320" y="250" width="120" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="380" y="270" class="dg-label">DO #...</text>
+          <text x="380" y="285" class="dg-latin">scale infinite</text>
+
+          <rect x="500" y="40" width="100" height="50" rx="6" class="dg-node-bg" fill="#d8e2f4"/>
+          <text x="550" y="60" class="dg-label">D1 SHARED</text>
+          <text x="550" y="75" class="dg-latin">marketplace</text>
+
+          <rect x="500" y="110" width="100" height="50" rx="6" class="dg-node-bg" fill="#e8d8f4"/>
+          <text x="550" y="130" class="dg-label">VECTORIZE</text>
+          <text x="550" y="145" class="dg-latin">cross-tenant search</text>
+
+          <rect x="500" y="180" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4ead0"/>
+          <text x="550" y="200" class="dg-label">AI GATEWAY</text>
+          <text x="550" y="215" class="dg-latin">shared LLM</text>
+
+          <rect x="500" y="250" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8d8"/>
+          <text x="550" y="270" class="dg-label">STRIPE</text>
+          <text x="550" y="285" class="dg-latin">subscriptions</text>
+
+          <rect x="660" y="100" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="710" y="120" class="dg-label">PUBLIC SITE</text>
+          <text x="710" y="135" class="dg-latin">eigenatlas.com</text>
+
+          <rect x="660" y="180" width="100" height="50" rx="6" class="dg-node-bg" fill="#f4d8c9"/>
+          <text x="710" y="200" class="dg-label">ADMIN</text>
+          <text x="710" y="215" class="dg-latin">internal ops</text>
+
+          <path d="M 80 80 L 156 195" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 80 160 L 156 195" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 80 240 L 156 205" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 80 320 L 156 215" class="dg-arrow" marker-end="url(#arrow)"/>
+
+          <path d="M 260 195 Q 290 110 316 65" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 260 200 L 316 135" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 260 200 L 316 205" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 260 210 L 316 275" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+
+          <path d="M 440 65 L 496 65" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 440 130 L 496 135" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 440 200 L 496 200" class="dg-arrow" marker-end="url(#arrow)"/>
+          <path d="M 440 275 L 496 275" class="dg-arrow" marker-end="url(#arrow)"/>
+
+          <path d="M 600 130 L 656 130" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+          <path d="M 600 200 L 656 200" class="dg-arrow dg-flow" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+
+      <div class="block-label">Mapping Primitiva → Función</div>
+      <div class="prim-map">
+        <div class="pm-row"><div class="pm-prim">DO per Tenant</div><div class="pm-purpose"><strong>Aislación absoluta</strong> — cada cirujano tiene su propio DO con su data, prompts custom, calendar settings, branding</div></div>
+        <div class="pm-row"><div class="pm-prim">Worker (router)</div><div class="pm-purpose">Extrae tenant ID de subdomain (<code>{tenant}.eigenatlas.com</code>) o JWT, dispatch a DO correcto</div></div>
+        <div class="pm-row"><div class="pm-prim">D1 Shared</div><div class="pm-purpose">Marketplace data: directorio público de cirujanos, reviews, especialidades. Cross-tenant queries sólo aquí.</div></div>
+        <div class="pm-row"><div class="pm-prim">Vectorize</div><div class="pm-purpose">Search semántica cross-tenant (encuentra cirujano por procedimiento), pero index aislado per-tenant</div></div>
+        <div class="pm-row"><div class="pm-prim">AI Gateway</div><div class="pm-purpose">Shared LLM access — todos los tenants comparten cache de respuestas comunes (40% hit ratio)</div></div>
+        <div class="pm-row"><div class="pm-prim">Stripe Subscriptions</div><div class="pm-purpose">$30K setup + $20K MRR per tenant. Subscription state webhook → activate/deactivate DO</div></div>
+        <div class="pm-row"><div class="pm-prim">Workers for Platforms</div><div class="pm-purpose"><em>(opcional, fase tardía)</em> — tenants pueden deployar Workers custom dentro del namespace Eigen</div></div>
+        <div class="pm-row"><div class="pm-prim">Email Workers</div><div class="pm-purpose"><code>tenant@eigenatlas.com</code> rutea inbound email a DO correcto. Custom domains per tenant.</div></div>
+      </div>
+
+      <div class="block-label">Playbook de Cohort Onboarding</div>
+      <div class="playbook">
+        <div class="pb-step"><div class="pb-num">I</div><div class="pb-body"><strong>Cohort sale</strong>: 10 slots simultáneos en cohorte fundadora. Pricing lockeado ($30K + $20K). Filtra por commitment + fit.</div></div>
+        <div class="pb-step"><div class="pb-num">II</div><div class="pb-body"><strong>Onboarding paralelo</strong>: 3 semanas calendario por tenant. Diagnóstico → setup → testing → launch. Equipo Eigen rota entre tenants.</div></div>
+        <div class="pb-step"><div class="pb-num">III</div><div class="pb-body"><strong>Provision DO</strong>: <code>env.TENANTS.idFromName(surgeon-id)</code> crea instancia. Schema D1 si tiene tabla shared. Stripe subscription activa el binding.</div></div>
+        <div class="pb-step"><div class="pb-num">IV</div><div class="pb-body"><strong>Custom domain</strong>: <code>{name}.eigenatlas.com</code> via CF Pages custom domain API. SSL auto.</div></div>
+        <div class="pb-step"><div class="pb-num">V</div><div class="pb-body"><strong>Vertical config</strong>: Workspace specific — para cirujano cosmético vs traumatólogo, los prompts/protocols cambian. Workspace template + override per-tenant.</div></div>
+        <div class="pb-step"><div class="pb-num">VI</div><div class="pb-body"><strong>Cohort dynamics</strong>: peer learning, monthly group calls, shared best practices. Convierte 10 customers en advocates.</div></div>
+      </div>
+
+      <div class="projection">
+        <div class="projection-title">Proyección Financiera · Cohorte 10 cirujanos</div>
+        <div class="proj-grid">
+          <div class="proj-item"><div class="proj-label">CF cost / tenant</div><div class="proj-value">~$10/mes</div></div>
+          <div class="proj-item"><div class="proj-label">Setup revenue</div><div class="proj-value">$300K MXN</div></div>
+          <div class="proj-item"><div class="proj-label">MRR (10 × $20K)</div><div class="proj-value">$200K MXN</div></div>
+          <div class="proj-item"><div class="proj-label">Annual recurring</div><div class="proj-value">$2.4M MXN</div></div>
+        </div>
+      </div>
+
+      <div class="cross-link">→ <a href="volumen-ii.html#pars-i">Vol II · Pattern VII (Multi-Tenant)</a> · <a href="volumen-i.html">Vol I · Workers for Platforms</a> · <a href="volumen-iii.html#pars-ii">Vol III · Cost models</a></div>
+    </div>
+  </article>
+
+  <div class="section-divider"><svg viewBox="0 0 280 36"><use href="#divider"/></svg></div>
+
+  <!-- EPILOGUE -->
+  <section class="section">
+    <div class="epilogue">
+      <div class="epilogue-mark">❦</div>
+      <div class="epilogue-title">Epilogo</div>
+      <div class="epilogue-latin">De Verticali Maestria</div>
+      <p>Las primitivas no producen valor por sí mismas. La arquitectura tampoco. <strong>El valor nace cuando aplicas el stack a un problema real, en un mercado específico, con un cliente que paga.</strong> Cada vertical tiene su gramática propia: medical exige cero downtime y discreción, hospitality exige multi-tenant + revenue management, pharma exige data pipeline canonical, B2B SaaS exige aislación + economics escalables.</p>
+      <p>El stack es el mismo. La aplicación cambia. Por eso un arquitecto que domina los 4 volúmenes — primitivas, arquitectura, operación, verticales — puede entrar a cualquier industria y proponer la solución correcta en horas, no semanas.</p>
+      <p>Cuatro volúmenes. Cuatro dimensiones de maestría. <strong>Compone tu propio quinto volumen</strong> con el vertical que más te interese — el codex está pensado para extenderse.</p>
+    </div>
+
+    <div class="colophon">
+      <div class="colophon-mark">⁘ ❦ ⁘</div>
+      <div class="colophon-text">Volumen IV compositus · Tetralogia consummata · Anno Domini MMXXVI · In nomine Cloudflarensis</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.vertical, .epilogue, .hero-frame').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    }
+  );
+});
+</script>
+
+<script src="/search.js" defer></script>
+</body>
+</html>
